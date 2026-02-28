@@ -1,26 +1,38 @@
-<script setup lang="ts">
-import Versions from './components/Versions.vue'
-
-const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+<script setup>
+import Sidebar from './components/Sidebar.vue'
 </script>
 
 <template>
-  <img alt="logo" class="logo" src="./assets/electron.svg" />
-  <div class="creator">Powered by electron-vite</div>
-  <div class="text">
-    Build an Electron app with
-    <span class="vue">Vue</span>
-    and
-    <span class="ts">TypeScript</span>
+  <div class="flex h-screen bg-slate-50 text-slate-900 w-full">
+    <Sidebar />
+    <main class="flex-1 p-8 overflow-y-auto">
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold text-slate-900">Dashboard Overview</h1>
+        <p class="text-slate-500">Welcome back, here is what's happening with tickets.</p>
+      </header>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+          <h3 class="font-semibold text-slate-500 mb-2">Open Tickets</h3>
+          <p class="text-3xl font-bold">12</p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+          <h3 class="font-semibold text-slate-500 mb-2 text-red-500">High Priority</h3>
+          <p class="text-3xl font-bold text-red-500">4</p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+          <h3 class="font-semibold text-slate-500 mb-2 text-green-600">Avg. SLA Time</h3>
+          <p class="text-3xl font-bold text-green-600">1.5h</p>
+        </div>
+      </div>
+    </main>
   </div>
-  <p class="tip">Please try pressing <code>F12</code> to open the devTool</p>
-  <div class="actions">
-    <div class="action">
-      <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">Documentation</a>
-    </div>
-    <div class="action">
-      <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
-    </div>
-  </div>
-  <Versions />
 </template>
+
+<style>
+
+body {
+  margin: 0;
+  padding: 0;
+}
+</style>
