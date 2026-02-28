@@ -11,6 +11,8 @@
 7. Жученко Володимир
 8. Лазоренко Євгеній
 
+## Стек: Electron + Vite + Vue + Tailwind v4
+
 ## Запуск:
 npm install
 npm run dev
