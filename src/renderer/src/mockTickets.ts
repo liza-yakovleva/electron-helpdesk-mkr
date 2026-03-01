@@ -1,4 +1,4 @@
-import { Ticket } from './types';
+import { Ticket } from '../../shared/types';
 
 export const mockTickets: Ticket[] = [
   {

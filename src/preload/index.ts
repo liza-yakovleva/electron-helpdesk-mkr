@@ -1,12 +1,16 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import type { Ticket } from '../shared/types'
 
-// Custom APIs for renderer
-const api = {}
+const api = {
+  getTickets: (): Promise<Ticket[]> =>
+    ipcRenderer.invoke('get-tickets'),
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
+  saveTicket: (ticket: Ticket): Promise<Ticket[]> =>
+    ipcRenderer.invoke('save-ticket', ticket)
+}
+
+//  boilerplate-логіку
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
@@ -15,8 +19,8 @@ if (process.contextIsolated) {
     console.error(error)
   }
 } else {
-  // @ts-ignore (define in dts)
+  // @ts-ignore
   window.electron = electronAPI
-  // @ts-ignore (define in dts)
+  // @ts-ignore
   window.api = api
 }
