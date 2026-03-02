@@ -2,15 +2,15 @@
 import { ref, onMounted } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 import KanbanBoard from './components/KanbanBoard.vue'
-import type { Ticket } from './types'
+import TicketList from './components/TicketList.vue'
+import type { Ticket } from '../../shared/types'
 
-// ❌ ВИДАЛЯЄМО mockTickets
-// import { mockTickets as initialTickets } from './mockTickets'
+
 
 const currentView = ref<'dashboard' | 'kanban'>('kanban')
 const theme = ref<'light' | 'dark'>('light')
 
-// 🔥 Тепер масив спочатку пустий
+
 const tickets = ref<Ticket[]>([])
 
 const setView = (view: 'dashboard' | 'kanban') => {
@@ -28,7 +28,7 @@ const toggleTheme = () => {
   applyTheme(theme.value === 'dark' ? 'light' : 'dark')
 }
 
-// 🔥 Завантажуємо з backend при старті
+
 onMounted(async () => {
   const savedTheme = localStorage.getItem('theme')
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -41,7 +41,7 @@ onMounted(async () => {
   }
 })
 
-// 🔥 Тепер оновлення зберігається в JSON
+
 const handleMoveTicket = async (
   ticketId: string,
   newStatus: Ticket['status']
@@ -71,13 +71,15 @@ const handleMoveTicket = async (
     <main class="flex-1 h-full overflow-y-auto p-8">
       <template v-if="currentView === 'dashboard'">
         <header class="mb-8">
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Dashboard Overview</h1>
+ <template v-if="currentView === 'dashboard'">
+        <header class="mb-8">
+          <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
           <p class="text-slate-500 dark:text-slate-400">
-            Welcome back, here is what's happening with tickets.
+            Швидкий пошук, фільтрація та перегляд великого обсягу тікетів.
           </p>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <h3 class="mb-2 font-semibold text-slate-500 dark:text-slate-400">Open Tickets</h3>
             <p class="text-3xl font-bold">
@@ -103,6 +105,10 @@ const handleMoveTicket = async (
             </p>
           </div>
         </div>
+
+        <TicketList :tickets="tickets" />
+      </template>
+      main
       </template>
 
       <template v-else-if="currentView === 'kanban'">
