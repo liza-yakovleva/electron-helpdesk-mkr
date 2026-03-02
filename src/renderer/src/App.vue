@@ -50,39 +50,39 @@ const handleMoveTicket = async (
 </script>
 
 <template>
-  <div class="flex h-screen bg-slate-50 text-slate-900 w-full overflow-hidden">
+  <div class="flex h-screen w-full overflow-hidden text-app-text">
     <Sidebar :current-view="currentView" @set-view="setView" />
     <main class="flex-1 p-8 overflow-y-auto h-full">
       <template v-if="currentView === 'dashboard'">
         <header class="mb-8">
-          <h1 class="text-2xl font-bold text-slate-900">Dashboard Overview</h1>
-          <p class="text-slate-500">
+          <h1 class="text-2xl font-extrabold">Dashboard Overview</h1>
+          <p class="text-app-muted">
             Welcome back, here is what's happening with tickets.
           </p>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
-            <h3 class="font-semibold text-slate-500 mb-2">Open Tickets</h3>
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-muted mb-2">Open Tickets</h3>
             <p class="text-3xl font-bold">
               {{ tickets.filter(t => t.status === 'open').length }}
             </p>
           </div>
 
-          <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
-            <h3 class="font-semibold text-slate-500 mb-2 text-red-500">
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-danger mb-2">
               High Priority
             </h3>
-            <p class="text-3xl font-bold text-red-500">
+            <p class="text-3xl font-bold text-app-danger">
               {{ tickets.filter(t => t.priority === 'high' || t.priority === 'urgent').length }}
             </p>
           </div>
 
-          <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
-            <h3 class="font-semibold text-slate-500 mb-2 text-green-600">
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-success mb-2">
               Total Tickets
             </h3>
-            <p class="text-3xl font-bold text-green-600">
+            <p class="text-3xl font-bold text-app-success">
               {{ tickets.length }}
             </p>
           </div>
@@ -92,8 +92,8 @@ const handleMoveTicket = async (
       <template v-else-if="currentView === 'kanban'">
         <header class="mb-8 flex justify-between items-end">
           <div>
-            <h1 class="text-2xl font-bold text-slate-900">Kanban Board</h1>
-            <p class="text-slate-500">
+            <h1 class="text-2xl font-extrabold">Kanban Board</h1>
+            <p class="text-app-muted">
               Track and manage ticket statuses and SLA.
             </p>
           </div>
@@ -109,10 +109,3 @@ const handleMoveTicket = async (
     </main>
   </div>
 </template>
-
-<style>
-body {
-  margin: 0;
-  padding: 0;
-}
-</style>
