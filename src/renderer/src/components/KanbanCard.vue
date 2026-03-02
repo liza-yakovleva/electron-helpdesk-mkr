@@ -1,68 +1,9 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-import { Ticket } from '../types';
-
-const props = defineProps<{
-  ticket: Ticket;
-}>();
-
-const slaStatus = computed(() => {
-  const now = new Date();
-  const deadlineDate = new Date(props.ticket.deadline);
-  const diff = deadlineDate.getTime() - now.getTime();
-  
-  if (diff < 0) return 'overdue';
-  if (diff < 12 * 60 * 60 * 1000) return 'urgent'; // Less than 12 hours
-  return 'on-track';
-});
-
-const slaLabel = computed(() => {
-  if (slaStatus.value === 'overdue') return 'Overdue';
-  if (slaStatus.value === 'urgent') return 'Due Soon';
-  return 'On Track';
-});
-
-const priorityClass = computed(() => {
-  switch (props.ticket.priority) {
-    case 'urgent': return 'border-red-100 bg-red-50 text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300';
-    case 'high': return 'border-orange-100 bg-orange-50 text-orange-600 dark:border-orange-500/30 dark:bg-orange-500/10 dark:text-orange-300';
-    case 'medium': return 'border-blue-100 bg-blue-50 text-blue-600 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-300';
-    case 'low': return 'border-slate-100 bg-slate-50 text-slate-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300';
-    default: return 'border-slate-100 bg-slate-50 text-slate-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300';
-  }
-});
-
-const slaClass = computed(() => {
-  switch (slaStatus.value) {
-    case 'overdue': return 'bg-red-500 text-white';
-    case 'urgent': return 'bg-amber-500 text-white';
-    case 'on-track': return 'bg-emerald-500 text-white';
-    default: return 'bg-slate-500 text-white';
-  }
-});
-
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return date.toLocaleString('uk-UA', { 
-    day: '2-digit', 
-    month: '2-digit', 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
-};
-const handleDragStart = (event: DragEvent) => {
-  if (event.dataTransfer) {
-    event.dataTransfer.setData('ticketId', props.ticket.id);
-    event.dataTransfer.effectAllowed = 'move';
-  }
-};
-</script>
-
 <template>
   <div 
     draggable="true"
     @dragstart="handleDragStart"
-    class="group mb-3 cursor-grab rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing dark:border-slate-700 dark:bg-slate-900"
+    @click="emit('edit-ticket', ticket.id)"
+    class="group mb-3 cursor-pointer rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md hover:border-blue-300 active:cursor-grabbing dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-500/50"
   >
     <div class="flex justify-between items-start mb-2">
       <span class="text-xs font-mono font-bold text-slate-400 transition-colors group-hover:text-blue-600 dark:text-slate-500">

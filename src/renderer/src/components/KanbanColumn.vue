@@ -12,6 +12,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'move-ticket', ticketId: string, newStatus: Ticket['status']): void;
+  (e: 'edit-ticket', ticketId: string): void;
 }>();
 
 const isCollapsed = ref(false);
@@ -160,6 +161,7 @@ const toggleSort = (type: typeof sortBy.value) => {
           v-for="ticket in sortedTickets" 
           :key="ticket.id" 
           :ticket="ticket" 
+          @edit-ticket="(id) => $emit('edit-ticket', id)"
         />
       </transition-group>
       

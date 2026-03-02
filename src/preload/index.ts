@@ -7,7 +7,10 @@ const api = {
     ipcRenderer.invoke('get-tickets'),
 
   saveTicket: (ticket: Ticket): Promise<Ticket[]> =>
-    ipcRenderer.invoke('save-ticket', ticket)
+    ipcRenderer.invoke('save-ticket', ticket),
+
+  deleteTicket: (ticketId: string): Promise<Ticket[]> =>
+    ipcRenderer.invoke('delete-ticket', ticketId)
 }
 
 //  boilerplate-логіку

@@ -3,13 +3,14 @@ import { ref, onMounted } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 import KanbanBoard from './components/KanbanBoard.vue'
 import TicketList from './components/TicketList.vue'
+import TicketForm from './components/TicketForm.vue'
+import TicketEditModal from './components/TicketEditModal.vue'
 import type { Ticket } from '../../shared/types'
-
-
 
 const currentView = ref<'dashboard' | 'kanban'>('kanban')
 const theme = ref<'light' | 'dark'>('light')
-
+const showTicketForm = ref(false)
+const editingTicket = ref<Ticket | null>(null)
 
 const tickets = ref<Ticket[]>([])
 
@@ -28,7 +29,6 @@ const toggleTheme = () => {
   applyTheme(theme.value === 'dark' ? 'light' : 'dark')
 }
 
-
 onMounted(async () => {
   const savedTheme = localStorage.getItem('theme')
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -40,7 +40,6 @@ onMounted(async () => {
     console.error('Failed to load tickets:', error)
   }
 })
-
 
 const handleMoveTicket = async (
   ticketId: string,
@@ -57,10 +56,26 @@ const handleMoveTicket = async (
 
     try {
       tickets.value = await window.api.saveTicket(updatedTicket)
-      console.log(`Ticket ${ticketId} moved to ${newStatus}`)
     } catch (error) {
       console.error('Failed to save ticket:', error)
     }
+  }
+}
+
+const handleTicketCreated = (updatedTickets: Ticket[]) => {
+  tickets.value = updatedTickets
+  showTicketForm.value = false
+}
+
+const handleTicketEdited = (updatedTickets: Ticket[]) => {
+  tickets.value = updatedTickets
+  editingTicket.value = null
+}
+
+const openEditModal = (ticketId: string) => {
+  const ticket = tickets.value.find(t => t.id === ticketId)
+  if (ticket) {
+    editingTicket.value = ticket
   }
 }
 </script>
@@ -120,10 +135,25 @@ const handleMoveTicket = async (
             <KanbanBoard
               :tickets="tickets"
               @move-ticket="handleMoveTicket"
+              @open-ticket-form="showTicketForm = true"
+              @edit-ticket="openEditModal"
             />
           </div>
         </section>
       </template>
+
+      <TicketForm 
+        v-if="showTicketForm" 
+        @close="showTicketForm = false" 
+        @submit="handleTicketCreated" 
+      />
+      
+      <TicketEditModal
+        v-if="editingTicket"
+        :ticket="editingTicket"
+        @close="editingTicket = null"
+        @submit="handleTicketEdited"
+      />
     </main>
   </div>
 </template>
