@@ -7,22 +7,33 @@ import TicketForm from './components/TicketForm.vue'
 import TicketEditModal from './components/TicketEditModal.vue'
 import type { Ticket } from '../../shared/types'
 
-// ❌ ВИДАЛЯЄМО mockTickets
-// import { mockTickets as initialTickets } from './mockTickets'
-
 const currentView = ref<'dashboard' | 'kanban'>('kanban')
+const theme = ref<'light' | 'dark'>('light')
 const showTicketForm = ref(false)
 const editingTicket = ref<Ticket | null>(null)
 
-// 🔥 Тепер масив спочатку пустий
 const tickets = ref<Ticket[]>([])
 
 const setView = (view: 'dashboard' | 'kanban') => {
   currentView.value = view
 }
 
-// 🔥 Завантажуємо з backend при старті
+const applyTheme = (nextTheme: 'light' | 'dark') => {
+  theme.value = nextTheme
+  document.documentElement.classList.toggle('dark', nextTheme === 'dark')
+  document.documentElement.style.colorScheme = nextTheme
+  localStorage.setItem('theme', nextTheme)
+}
+
+const toggleTheme = () => {
+  applyTheme(theme.value === 'dark' ? 'light' : 'dark')
+}
+
 onMounted(async () => {
+  const savedTheme = localStorage.getItem('theme')
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  applyTheme(savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : systemPrefersDark ? 'dark' : 'light')
+
   try {
     tickets.value = await window.api.getTickets()
   } catch (error) {
@@ -30,7 +41,6 @@ onMounted(async () => {
   }
 })
 
-// 🔥 Тепер оновлення зберігається в JSON
 const handleMoveTicket = async (
   ticketId: string,
   newStatus: Ticket['status']
@@ -46,7 +56,6 @@ const handleMoveTicket = async (
 
     try {
       tickets.value = await window.api.saveTicket(updatedTicket)
-      console.log(`Ticket ${ticketId} moved to ${newStatus}`)
     } catch (error) {
       console.error('Failed to save ticket:', error)
     }
@@ -72,46 +81,73 @@ const openEditModal = (ticketId: string) => {
 </script>
 
 <template>
-  <div class="flex h-screen bg-slate-50 text-slate-900 w-full overflow-hidden">
-    <Sidebar :current-view="currentView" @set-view="setView" />
-    <main class="flex-1 p-8 overflow-y-auto h-full">
+  <div class="flex h-dvh w-full min-h-0 overflow-hidden bg-slate-50 text-app-text transition-colors dark:bg-slate-950 dark:text-slate-100">
+    <Sidebar :current-view="currentView" :theme="theme" @set-view="setView" @toggle-theme="toggleTheme" />
+    
+    <main class="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 scrollbar-app">
+      
       <template v-if="currentView === 'dashboard'">
-        <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 class="text-2xl font-bold text-slate-900">Ticket Table View</h1>
-            <p class="text-slate-500">
-              Швидкий пошук, фільтрація та перегляд великого обсягу тікетів.
+        <header class="mb-6 lg:mb-8">
+          <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
+          <p class="text-app-muted">
+            Швидкий пошук, фільтрація та перегляд великого обсягу тікетів.
+          </p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-muted mb-2">Open Tickets</h3>
+            <p class="text-3xl font-bold italic">
+              {{ tickets.filter(t => t.status === 'open').length }}
             </p>
           </div>
-        </header>
+
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-danger mb-2">High Priority</h3>
+            <p class="text-3xl font-bold text-app-danger">
+              {{ tickets.filter(t => t.priority === 'high' || t.priority === 'urgent').length }}
+            </p>
+          </div>
+
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-success mb-2">Total Tickets</h3>
+            <p class="text-3xl font-bold text-app-success">
+              {{ tickets.length }}
+            </p>
+          </div>
+        </div>
 
         <TicketList :tickets="tickets" />
       </template>
 
       <template v-else-if="currentView === 'kanban'">
-        <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 class="text-2xl font-bold text-slate-900">Kanban Board</h1>
-            <p class="text-slate-500">
-              Track and manage ticket statuses and SLA.
-            </p>
-          </div>
-        </header>
+        <section class="flex min-h-[32rem] flex-col">
+          <header class="mb-6 flex justify-between items-end lg:mb-8">
+            <div>
+              <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Kanban Board</h1>
+              <p class="text-app-muted">
+                Track and manage ticket statuses and SLA.
+              </p>
+            </div>
+          </header>
 
-        <div class="h-[calc(100%-100px)]">
-          <KanbanBoard
-            :tickets="tickets"
-            @move-ticket="handleMoveTicket"
-            @open-ticket-form="showTicketForm = true"
-            @edit-ticket="openEditModal"
-          />
-        </div>
+          <div class="min-h-[22rem] flex-1">
+            <KanbanBoard
+              :tickets="tickets"
+              @move-ticket="handleMoveTicket"
+              @open-ticket-form="showTicketForm = true"
+              @edit-ticket="openEditModal"
+            />
+          </div>
+        </section>
       </template>
+
       <TicketForm 
         v-if="showTicketForm" 
         @close="showTicketForm = false" 
         @submit="handleTicketCreated" 
       />
+      
       <TicketEditModal
         v-if="editingTicket"
         :ticket="editingTicket"
@@ -121,10 +157,3 @@ const openEditModal = (ticketId: string) => {
     </main>
   </div>
 </template>
-
-<style>
-body {
-  margin: 0;
-  padding: 0;
-}
-</style>
