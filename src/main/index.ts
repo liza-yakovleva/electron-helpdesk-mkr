@@ -79,7 +79,13 @@ app.whenReady().then(() => {
     return tickets
   })
 
- 
+  ipcMain.handle('delete-ticket', (_event, ticketId: string) => {
+    let tickets = getTickets()
+    tickets = tickets.filter(t => t.id !== ticketId)
+    saveTickets(tickets)
+    return tickets
+  })
+
 
   createWindow()
 

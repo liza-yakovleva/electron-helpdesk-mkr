@@ -6,6 +6,10 @@ const props = defineProps<{
   ticket: Ticket;
 }>();
 
+const emit = defineEmits<{
+  (e: 'edit-ticket', ticketId: string): void;
+}>();
+
 const slaStatus = computed(() => {
   const now = new Date();
   const deadlineDate = new Date(props.ticket.deadline);
@@ -62,7 +66,8 @@ const handleDragStart = (event: DragEvent) => {
   <div 
     draggable="true"
     @dragstart="handleDragStart"
-    class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing mb-3 group"
+    @click="emit('edit-ticket', ticket.id)"
+    class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all cursor-pointer mb-3 group relative overflow-hidden"
   >
     <div class="flex justify-between items-start mb-2">
       <span class="text-xs font-mono font-bold text-slate-400 group-hover:text-blue-600 transition-colors">

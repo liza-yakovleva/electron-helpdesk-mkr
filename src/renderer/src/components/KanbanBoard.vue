@@ -10,6 +10,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'move-ticket', ticketId: string, newStatus: Ticket['status']): void;
+  (e: 'open-ticket-form'): void;
 }>();
 
 // --- Search Logic ---
@@ -216,14 +217,15 @@ const isFilterActive = computed(() => {
             </div>
           </div>
         </div>
+        <button 
+          @click="$emit('open-ticket-form')"
+          class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/25 transition-all active:scale-95"
+        >
+          <Plus :size="18" />
+          New Ticket
+        </button>
       </div>
-
-      <button class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/25 transition-all active:scale-95">
-        <Plus :size="18" />
-        New Ticket
-      </button>
     </div>
-
 
     <!-- Board Area -->
     <div class="flex-1 overflow-x-auto pb-4 custom-scrollbar">
@@ -235,6 +237,7 @@ const isFilterActive = computed(() => {
           :status="status"
           :tickets="filterTicketsByStatus(status)"
           @move-ticket="(id, status) => $emit('move-ticket', id, status)"
+          @edit-ticket="(id) => $emit('edit-ticket', id)"
         />
       </div>
     </div>
