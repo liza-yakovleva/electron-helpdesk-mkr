@@ -2,7 +2,8 @@
 import { ref, onMounted } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 import KanbanBoard from './components/KanbanBoard.vue'
-import type { Ticket } from './types'
+import TicketList from './components/TicketList.vue'
+import type { Ticket } from '../../shared/types'
 
 // ❌ ВИДАЛЯЄМО mockTickets
 // import { mockTickets as initialTickets } from './mockTickets'
@@ -55,38 +56,13 @@ const handleMoveTicket = async (
     <main class="flex-1 p-8 overflow-y-auto h-full">
       <template v-if="currentView === 'dashboard'">
         <header class="mb-8">
-          <h1 class="text-2xl font-bold text-slate-900">Dashboard Overview</h1>
+          <h1 class="text-2xl font-bold text-slate-900">Ticket Table View</h1>
           <p class="text-slate-500">
-            Welcome back, here is what's happening with tickets.
+            Швидкий пошук, фільтрація та перегляд великого обсягу тікетів.
           </p>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
-            <h3 class="font-semibold text-slate-500 mb-2">Open Tickets</h3>
-            <p class="text-3xl font-bold">
-              {{ tickets.filter(t => t.status === 'open').length }}
-            </p>
-          </div>
-
-          <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
-            <h3 class="font-semibold text-slate-500 mb-2 text-red-500">
-              High Priority
-            </h3>
-            <p class="text-3xl font-bold text-red-500">
-              {{ tickets.filter(t => t.priority === 'high' || t.priority === 'urgent').length }}
-            </p>
-          </div>
-
-          <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
-            <h3 class="font-semibold text-slate-500 mb-2 text-green-600">
-              Total Tickets
-            </h3>
-            <p class="text-3xl font-bold text-green-600">
-              {{ tickets.length }}
-            </p>
-          </div>
-        </div>
+        <TicketList :tickets="tickets" />
       </template>
 
       <template v-else-if="currentView === 'kanban'">
