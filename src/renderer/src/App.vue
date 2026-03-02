@@ -66,33 +66,37 @@ const handleMoveTicket = async (
 </script>
 
 <template>
-  <div class="flex h-screen w-full overflow-hidden bg-slate-50 text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100">
+  <div class="flex h-dvh w-full min-h-0 overflow-hidden bg-slate-50 text-app-text transition-colors dark:bg-slate-950 dark:text-slate-100">
     <Sidebar :current-view="currentView" :theme="theme" @set-view="setView" @toggle-theme="toggleTheme" />
-   <main class="flex-1 h-full overflow-y-auto p-8">
+    
+    <main class="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 scrollbar-app">
+      
       <template v-if="currentView === 'dashboard'">
-        <header class="mb-8">
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
-          <p class="text-slate-500 dark:text-slate-400">
+        <header class="mb-6 lg:mb-8">
+          <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
+          <p class="text-app-muted">
             Швидкий пошук, фільтрація та перегляд великого обсягу тікетів.
           </p>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h3 class="mb-2 font-semibold text-slate-500 dark:text-slate-400">Open Tickets</h3>
-            <p class="text-3xl font-bold">
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-muted mb-2">Open Tickets</h3>
+            <p class="text-3xl font-bold italic">
               {{ tickets.filter(t => t.status === 'open').length }}
             </p>
           </div>
-          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h3 class="mb-2 font-semibold text-red-500">High Priority</h3>
-            <p class="text-3xl font-bold text-red-500">
+
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-danger mb-2">High Priority</h3>
+            <p class="text-3xl font-bold text-app-danger">
               {{ tickets.filter(t => t.priority === 'high' || t.priority === 'urgent').length }}
             </p>
           </div>
-          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h3 class="mb-2 font-semibold text-green-600">Total Tickets</h3>
-            <p class="text-3xl font-bold text-green-600">
+
+          <div class="app-card p-6">
+            <h3 class="font-semibold text-app-success mb-2">Total Tickets</h3>
+            <p class="text-3xl font-bold text-app-success">
               {{ tickets.length }}
             </p>
           </div>
@@ -102,29 +106,24 @@ const handleMoveTicket = async (
       </template>
 
       <template v-else-if="currentView === 'kanban'">
-        <header class="mb-8 flex justify-between items-end">
-          <div>
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Kanban Board</h1>
-            <p class="text-slate-500 dark:text-slate-400">
-              Track and manage ticket statuses and SLA.
-            </p>
-          </div>
-        </header>
+        <section class="flex min-h-[32rem] flex-col">
+          <header class="mb-6 flex justify-between items-end lg:mb-8">
+            <div>
+              <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Kanban Board</h1>
+              <p class="text-app-muted">
+                Track and manage ticket statuses and SLA.
+              </p>
+            </div>
+          </header>
 
-        <div class="h-[calc(100%-100px)]">
-          <KanbanBoard
-            :tickets="tickets"
-            @move-ticket="handleMoveTicket"
-          />
-        </div>
+          <div class="min-h-[22rem] flex-1">
+            <KanbanBoard
+              :tickets="tickets"
+              @move-ticket="handleMoveTicket"
+            />
+          </div>
+        </section>
       </template>
     </main>
   </div>
 </template>
-
-<style>
-body {
-  margin: 0;
-  padding: 0;
-}
-</style>

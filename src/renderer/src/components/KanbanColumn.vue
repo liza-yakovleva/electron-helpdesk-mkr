@@ -14,7 +14,6 @@ const emit = defineEmits<{
   (e: 'move-ticket', ticketId: string, newStatus: Ticket['status']): void;
 }>();
 
-// --- Local State ---
 const isCollapsed = ref(false);
 const sortBy = ref<'priority' | 'deadline' | 'createdAt' | null>(null);
 const showMenu = ref(false);
@@ -88,7 +87,6 @@ const toggleSort = (type: typeof sortBy.value) => {
     @dragleave="isDraggingOver = false"
     @drop="handleDrop"
   >
-    <!-- Column Header -->
     <div 
       :class="[
         'sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/40 p-4 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/70',
@@ -124,7 +122,6 @@ const toggleSort = (type: typeof sortBy.value) => {
           <MoreVertical :size="16" />
         </button>
 
-        <!-- Dropdown Menu -->
         <div v-if="showMenu" class="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-900">
           <div class="px-2 py-1 mb-1">
             <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Sort By</span>
@@ -153,8 +150,7 @@ const toggleSort = (type: typeof sortBy.value) => {
       </div>
     </div>
 
-    <!-- Column Content -->
-    <div v-if="!isCollapsed" class="flex-1 p-3 overflow-y-auto space-y-3 custom-scrollbar bg-transparent">
+    <div v-if="!isCollapsed" class="flex-1 min-h-0 overflow-y-auto space-y-3 bg-transparent p-3 scrollbar-app">
       <transition-group 
         name="list" 
         tag="div"
@@ -178,28 +174,6 @@ const toggleSort = (type: typeof sortBy.value) => {
 </template>
 
 <style scoped>
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(203, 213, 225, 0.5);
-  border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
-}
-
-:global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(71, 85, 105, 0.7);
-}
-
-:global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.85);
-}
-
 .list-move,
 .list-enter-active,
 .list-leave-active {
@@ -221,4 +195,3 @@ const toggleSort = (type: typeof sortBy.value) => {
   white-space: nowrap;
 }
 </style>
-
