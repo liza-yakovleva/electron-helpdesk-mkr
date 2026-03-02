@@ -102,4 +102,63 @@
     scrollbar-color: #c9d3e4 transparent;
   }
 
-  *::-webkit-scrollbar
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #c9d3e4;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: #95a6c5;
+  }
+}
+
+@layer utilities {
+  .app-surface {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius-app-lg);
+    box-shadow: var(--shadow-app-soft);
+    backdrop-filter: blur(10px);
+  }
+
+  .app-card {
+    background: var(--app-surface-solid);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius-app);
+    box-shadow: var(--shadow-app-card);
+  }
+
+  .scrollbar-app {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.55) transparent;
+  }
+
+  .scrollbar-app::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-app::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-app::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.55);
+    border-radius: 9999px;
+  }
+
+  .scrollbar-app::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.65);
+  }
+}
