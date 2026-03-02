@@ -68,10 +68,8 @@ const handleMoveTicket = async (
 <template>
   <div class="flex h-screen w-full overflow-hidden bg-slate-50 text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100">
     <Sidebar :current-view="currentView" :theme="theme" @set-view="setView" @toggle-theme="toggleTheme" />
-    <main class="flex-1 h-full overflow-y-auto p-8">
+   <main class="flex-1 h-full overflow-y-auto p-8">
       <template v-if="currentView === 'dashboard'">
-        <header class="mb-8">
- <template v-if="currentView === 'dashboard'">
         <header class="mb-8">
           <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
           <p class="text-slate-500 dark:text-slate-400">
@@ -86,20 +84,14 @@ const handleMoveTicket = async (
               {{ tickets.filter(t => t.status === 'open').length }}
             </p>
           </div>
-
           <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h3 class="mb-2 font-semibold text-red-500">
-              High Priority
-            </h3>
+            <h3 class="mb-2 font-semibold text-red-500">High Priority</h3>
             <p class="text-3xl font-bold text-red-500">
               {{ tickets.filter(t => t.priority === 'high' || t.priority === 'urgent').length }}
             </p>
           </div>
-
           <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h3 class="mb-2 font-semibold text-green-600">
-              Total Tickets
-            </h3>
+            <h3 class="mb-2 font-semibold text-green-600">Total Tickets</h3>
             <p class="text-3xl font-bold text-green-600">
               {{ tickets.length }}
             </p>
@@ -107,8 +99,6 @@ const handleMoveTicket = async (
         </div>
 
         <TicketList :tickets="tickets" />
-      </template>
-      main
       </template>
 
       <template v-else-if="currentView === 'kanban'">
