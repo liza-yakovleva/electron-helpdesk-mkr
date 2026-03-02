@@ -14,7 +14,6 @@ const emit = defineEmits<{
   (e: 'move-ticket', ticketId: string, newStatus: Ticket['status']): void;
 }>();
 
-// --- Local State ---
 const isCollapsed = ref(false);
 const sortBy = ref<'priority' | 'deadline' | 'createdAt' | null>(null);
 const showMenu = ref(false);
@@ -80,30 +79,31 @@ const toggleSort = (type: typeof sortBy.value) => {
     :class="[
       'flex-shrink-0 flex flex-col h-full rounded-2xl border transition-all duration-300 overflow-hidden',
       isCollapsed ? 'w-16' : 'w-80',
-      isDraggingOver ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-500/20 shadow-lg scale-[1.02]' : 'bg-slate-100/50 border-slate-200/60'
+      isDraggingOver
+        ? 'scale-[1.02] border-blue-300 bg-blue-50 ring-2 ring-blue-500/20 shadow-lg dark:border-blue-400/40 dark:bg-blue-500/10'
+        : 'border-slate-200/60 bg-slate-100/50 dark:border-slate-800 dark:bg-slate-900/50'
     ]"
     @dragover.prevent="isDraggingOver = true"
     @dragleave="isDraggingOver = false"
     @drop="handleDrop"
   >
-    <!-- Column Header -->
     <div 
       :class="[
-        'p-4 flex items-center justify-between border-b border-slate-200 bg-white/40 backdrop-blur-sm sticky top-0 z-10',
-        isCollapsed ? 'flex-col h-full py-6 cursor-pointer hover:bg-white/60 transition-colors' : ''
+        'sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/40 p-4 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/70',
+        isCollapsed ? 'h-full cursor-pointer flex-col py-6 transition-colors hover:bg-white/60 dark:hover:bg-slate-900' : ''
       ]"
       @click="isCollapsed ? isCollapsed = false : null"
     >
       <div :class="['flex items-center gap-2', isCollapsed ? 'flex-col' : '']">
         <div :class="['w-2.5 h-2.5 rounded-full shadow-sm', getStatusColor(status)]"></div>
         <h3 :class="[
-          'font-extrabold text-slate-700 capitalize tracking-tight',
+          'font-extrabold capitalize tracking-tight text-slate-700 dark:text-slate-200',
           isCollapsed ? 'vertical-text mt-4' : ''
         ]">
           {{ title }}
         </h3>
         <span :class="[
-          'px-2 py-0.5 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold shadow-inner',
+          'rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-500 shadow-inner dark:bg-slate-800 dark:text-slate-300',
           isCollapsed ? 'mt-2' : 'ml-2'
         ]">
           {{ tickets.length }}
@@ -111,35 +111,34 @@ const toggleSort = (type: typeof sortBy.value) => {
       </div>
 
       <div v-if="isCollapsed" class="mt-auto">
-        <Maximize2 :size="16" class="text-slate-400" />
+        <Maximize2 :size="16" class="text-slate-400 dark:text-slate-500" />
       </div>
 
       <div v-if="!isCollapsed" class="relative">
         <button 
           @click.stop="showMenu = !showMenu"
-          class="p-1.5 hover:bg-slate-200 rounded-lg text-slate-400 transition-colors shadow-sm"
+          class="rounded-lg p-1.5 text-slate-400 shadow-sm transition-colors hover:bg-slate-200 dark:text-slate-500 dark:hover:bg-slate-800"
         >
           <MoreVertical :size="16" />
         </button>
 
-        <!-- Dropdown Menu -->
-        <div v-if="showMenu" class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-20 p-2 overflow-hidden">
+        <div v-if="showMenu" class="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-900">
           <div class="px-2 py-1 mb-1">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sort By</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Sort By</span>
           </div>
-          <button @click="toggleSort('priority')" :class="['w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg transition-colors', sortBy === 'priority' ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-50']">
+          <button @click="toggleSort('priority')" :class="['w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg transition-colors', sortBy === 'priority' ? 'bg-blue-50 text-blue-600 font-bold dark:bg-blue-500/15 dark:text-blue-300' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800']">
             <ArrowUpDown :size="14" /> Priority
           </button>
-          <button @click="toggleSort('deadline')" :class="['w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg transition-colors', sortBy === 'deadline' ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-50']">
+          <button @click="toggleSort('deadline')" :class="['w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg transition-colors', sortBy === 'deadline' ? 'bg-blue-50 text-blue-600 font-bold dark:bg-blue-500/15 dark:text-blue-300' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800']">
             <Clock :size="14" /> Deadline
           </button>
-          <button @click="toggleSort('createdAt')" :class="['w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg transition-colors', sortBy === 'createdAt' ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-50']">
+          <button @click="toggleSort('createdAt')" :class="['w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg transition-colors', sortBy === 'createdAt' ? 'bg-blue-50 text-blue-600 font-bold dark:bg-blue-500/15 dark:text-blue-300' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800']">
             <Calendar :size="14" /> Date Created
           </button>
           
-          <div class="h-px bg-slate-100 my-1"></div>
+          <div class="my-1 h-px bg-slate-100 dark:bg-slate-800"></div>
           
-          <button @click.stop="isCollapsed = !isCollapsed; showMenu = false" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">
+          <button @click.stop="isCollapsed = !isCollapsed; showMenu = false" class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs text-slate-600 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800">
             <template v-if="isCollapsed">
               <Maximize2 :size="14" /> Expand
             </template>
@@ -151,7 +150,6 @@ const toggleSort = (type: typeof sortBy.value) => {
       </div>
     </div>
 
-    <!-- Column Content -->
     <div v-if="!isCollapsed" class="flex-1 min-h-0 overflow-y-auto space-y-3 bg-transparent p-3 scrollbar-app">
       <transition-group 
         name="list" 
@@ -165,8 +163,8 @@ const toggleSort = (type: typeof sortBy.value) => {
         />
       </transition-group>
       
-      <div v-if="tickets.length === 0" class="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 text-xs gap-3">
-        <div class="p-3 bg-white rounded-full shadow-sm">
+      <div v-if="tickets.length === 0" class="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-12 text-xs text-slate-400 dark:border-slate-700 dark:text-slate-500">
+        <div class="rounded-full bg-white p-3 shadow-sm dark:bg-slate-900">
           <Maximize2 :size="24" class="opacity-20" />
         </div>
         <p class="font-medium">No tickets in this status</p>
@@ -197,4 +195,3 @@ const toggleSort = (type: typeof sortBy.value) => {
   white-space: nowrap;
 }
 </style>
-

@@ -2,22 +2,38 @@
 import { ref, onMounted } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 import KanbanBoard from './components/KanbanBoard.vue'
-import type { Ticket } from './types'
+import TicketList from './components/TicketList.vue'
+import type { Ticket } from '../../shared/types'
 
-// ❌ ВИДАЛЯЄМО mockTickets
-// import { mockTickets as initialTickets } from './mockTickets'
+
 
 const currentView = ref<'dashboard' | 'kanban'>('kanban')
+const theme = ref<'light' | 'dark'>('light')
 
-// 🔥 Тепер масив спочатку пустий
+
 const tickets = ref<Ticket[]>([])
 
 const setView = (view: 'dashboard' | 'kanban') => {
   currentView.value = view
 }
 
-// 🔥 Завантажуємо з backend при старті
+const applyTheme = (nextTheme: 'light' | 'dark') => {
+  theme.value = nextTheme
+  document.documentElement.classList.toggle('dark', nextTheme === 'dark')
+  document.documentElement.style.colorScheme = nextTheme
+  localStorage.setItem('theme', nextTheme)
+}
+
+const toggleTheme = () => {
+  applyTheme(theme.value === 'dark' ? 'light' : 'dark')
+}
+
+
 onMounted(async () => {
+  const savedTheme = localStorage.getItem('theme')
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  applyTheme(savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : systemPrefersDark ? 'dark' : 'light')
+
   try {
     tickets.value = await window.api.getTickets()
   } catch (error) {
@@ -25,7 +41,7 @@ onMounted(async () => {
   }
 })
 
-// 🔥 Тепер оновлення зберігається в JSON
+
 const handleMoveTicket = async (
   ticketId: string,
   newStatus: Ticket['status']
@@ -50,50 +66,50 @@ const handleMoveTicket = async (
 </script>
 
 <template>
-  <div class="flex h-dvh w-full min-h-0 overflow-hidden text-app-text">
-    <Sidebar :current-view="currentView" @set-view="setView" />
+  <div class="flex h-dvh w-full min-h-0 overflow-hidden bg-slate-50 text-app-text transition-colors dark:bg-slate-950 dark:text-slate-100">
+    <Sidebar :current-view="currentView" :theme="theme" @set-view="setView" @toggle-theme="toggleTheme" />
+    
     <main class="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 scrollbar-app">
+      
       <template v-if="currentView === 'dashboard'">
         <header class="mb-6 lg:mb-8">
-          <h1 class="text-2xl font-extrabold">Dashboard Overview</h1>
+          <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
           <p class="text-app-muted">
-            Welcome back, here is what's happening with tickets.
+            Швидкий пошук, фільтрація та перегляд великого обсягу тікетів.
           </p>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div class="app-card p-6">
             <h3 class="font-semibold text-app-muted mb-2">Open Tickets</h3>
-            <p class="text-3xl font-bold">
+            <p class="text-3xl font-bold italic">
               {{ tickets.filter(t => t.status === 'open').length }}
             </p>
           </div>
 
           <div class="app-card p-6">
-            <h3 class="font-semibold text-app-danger mb-2">
-              High Priority
-            </h3>
+            <h3 class="font-semibold text-app-danger mb-2">High Priority</h3>
             <p class="text-3xl font-bold text-app-danger">
               {{ tickets.filter(t => t.priority === 'high' || t.priority === 'urgent').length }}
             </p>
           </div>
 
           <div class="app-card p-6">
-            <h3 class="font-semibold text-app-success mb-2">
-              Total Tickets
-            </h3>
+            <h3 class="font-semibold text-app-success mb-2">Total Tickets</h3>
             <p class="text-3xl font-bold text-app-success">
               {{ tickets.length }}
             </p>
           </div>
         </div>
+
+        <TicketList :tickets="tickets" />
       </template>
 
       <template v-else-if="currentView === 'kanban'">
         <section class="flex min-h-[32rem] flex-col">
           <header class="mb-6 flex justify-between items-end lg:mb-8">
             <div>
-              <h1 class="text-2xl font-extrabold">Kanban Board</h1>
+              <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Kanban Board</h1>
               <p class="text-app-muted">
                 Track and manage ticket statuses and SLA.
               </p>

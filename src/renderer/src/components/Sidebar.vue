@@ -1,58 +1,74 @@
 <script setup lang="ts">
-import { LayoutDashboard, Table, ClipboardList, Moon } from 'lucide-vue-next';
+import { LayoutDashboard, Table, ClipboardList, Moon, Sun } from 'lucide-vue-next';
 
 defineProps<{
   currentView: string;
+  theme: 'light' | 'dark';
 }>();
 
 defineEmits<{
   (e: 'set-view', view: 'dashboard' | 'kanban'): void;
+  (e: 'toggle-theme'): void;
 }>();
 </script>
 
 <template>
-  <aside class="h-full w-16 min-w-16 shrink-0 overflow-y-auto bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 scrollbar-app sm:w-64 sm:min-w-64">
+  <aside class="flex h-screen w-16 min-w-16 shrink-0 flex-col border-r border-slate-200 bg-white text-slate-700 transition-colors dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 sm:w-64 sm:min-w-64">
     <div class="p-4 sm:p-6">
-      <h2 class="text-xl font-bold text-white flex items-center justify-center gap-2 sm:justify-start">
+      <h2 class="flex items-center justify-center gap-2 text-xl font-bold text-slate-900 dark:text-white sm:justify-start">
         <ClipboardList class="text-blue-500" />
         <span class="hidden sm:inline">HelpDesk</span>
-        <span class="hidden sm:inline text-xs bg-blue-600 px-1 rounded">PRO</span>
+        <span class="hidden sm:inline text-xs bg-blue-600 px-1 rounded text-white">PRO</span>
       </h2>
     </div>
 
-    <nav class="flex-1 px-2 sm:px-4 space-y-2">
+    <nav class="flex-1 px-2 space-y-2 sm:px-4">
       <button 
         @click="$emit('set-view', 'kanban')"
-        :class="['w-full flex items-center justify-center sm:justify-start gap-3 p-3 rounded-lg transition-colors text-left', currentView === 'kanban' ? 'bg-slate-800 text-white shadow-lg' : 'hover:bg-slate-800 text-slate-400']"
+        :class="[
+          'w-full rounded-lg p-3 transition-colors flex items-center justify-center sm:justify-start gap-3',
+          currentView === 'kanban'
+            ? 'bg-blue-50 text-blue-700 shadow-sm dark:bg-slate-800 dark:text-white dark:shadow-lg'
+            : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+        ]"
         title="Kanban Board"
       >
         <LayoutDashboard :size="20" />
         <span class="hidden sm:inline">Kanban Board</span>
       </button>
+
       <button 
         @click="$emit('set-view', 'dashboard')"
-        :class="['w-full flex items-center justify-center sm:justify-start gap-3 p-3 rounded-lg transition-colors text-left', currentView === 'dashboard' ? 'bg-slate-800 text-white shadow-lg' : 'hover:bg-slate-800 text-slate-400']"
+        :class="[
+          'w-full rounded-lg p-3 transition-colors flex items-center justify-center sm:justify-start gap-3',
+          currentView === 'dashboard'
+            ? 'bg-blue-50 text-blue-700 shadow-sm dark:bg-slate-800 dark:text-white dark:shadow-lg'
+            : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+        ]"
         title="Statistical View"
       >
         <Table :size="20" />
         <span class="hidden sm:inline">Statistical View</span>
       </button>
-      <a href="#" class="flex items-center justify-center sm:justify-start gap-3 p-3 rounded-lg hover:bg-slate-800 transition-colors text-slate-400" title="Audit Log">
+
+      <a href="#" class="flex items-center justify-center gap-3 rounded-lg p-3 text-slate-500 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 sm:justify-start" title="Audit Log">
         <ClipboardList :size="20" />
         <span class="hidden sm:inline">Audit Log</span>
       </a>
     </nav>
 
-    <div class="p-4 border-t border-slate-800 space-y-4">
-      <button class="flex items-center justify-center sm:justify-start gap-3 w-full p-2 hover:bg-slate-800 rounded-lg text-slate-400" title="Dark Mode">
-        <Moon :size="18" />
-        <span class="hidden sm:inline">Dark Mode</span>
+    <div class="space-y-4 border-t border-slate-200 p-4 dark:border-slate-800">
+      <button @click="$emit('toggle-theme')" class="flex w-full items-center justify-center gap-3 rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 sm:justify-start">
+        <Moon v-if="theme === 'light'" :size="18" />
+        <Sun v-else :size="18" />
+        <span class="hidden sm:inline">{{ theme === 'light' ? 'Dark Mode' : 'Light Mode' }}</span>
       </button>
-      <div class="flex items-center justify-center sm:justify-start gap-3 p-2">
-        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs">
+      
+      <div class="flex items-center justify-center gap-3 p-2 sm:justify-start">
+        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
           LY
         </div>
-        <span class="hidden sm:inline text-sm font-medium text-slate-200">Liza</span>
+        <span class="hidden sm:inline text-sm font-medium text-slate-700 dark:text-slate-200">Liza</span>
       </div>
     </div>
   </aside>
