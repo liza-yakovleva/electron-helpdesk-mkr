@@ -122,19 +122,19 @@ const isFilterActive = computed(() => {
         <!-- Search Input -->
         <div class="relative group">
           <Search 
-            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" 
+            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-blue-500 dark:text-slate-500" 
             :size="18" 
           />
           <input 
             v-model="searchQuery"
             type="text" 
             placeholder="Search tickets (ID, Title, Assignee)..." 
-            class="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all w-80 shadow-sm"
+            class="w-80 rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm text-slate-800 shadow-sm transition-all placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:ring-blue-500/30"
           />
           <button 
             v-if="searchQuery" 
             @click="searchQuery = ''; debouncedSearchQuery = ''"
-            class="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-full text-slate-400"
+            class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:bg-slate-100 dark:text-slate-500 dark:hover:bg-slate-800"
           >
             <X :size="14" />
           </button>
@@ -146,7 +146,9 @@ const isFilterActive = computed(() => {
             @click="showFilters = !showFilters"
             :class="[
               'flex items-center gap-2 px-3 py-2 border rounded-lg text-sm transition-all shadow-sm',
-              showFilters || isFilterActive ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+              showFilters || isFilterActive
+                ? 'border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-400/30 dark:bg-blue-500/15 dark:text-blue-300'
+                : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800'
             ]"
           >
             <Filter :size="16" />
@@ -156,21 +158,26 @@ const isFilterActive = computed(() => {
           </button>
 
           <!-- Dropdown Filter Menu -->
-          <div v-if="showFilters" class="absolute left-0 mt-2 w-72 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-4">
+          <div v-if="showFilters" class="absolute left-0 z-50 mt-2 w-72 rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900">
             <div class="flex justify-between items-center mb-4">
-              <h4 class="font-bold text-slate-800 text-sm">Fine Grained Filters</h4>
+              <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Fine Grained Filters</h4>
               <button @click="resetFilters" class="text-blue-600 text-[10px] font-bold uppercase hover:underline">Reset All</button>
             </div>
 
             <!-- Priority -->
             <div class="mb-4">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Priority</span>
+              <span class="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Priority</span>
               <div class="flex flex-wrap gap-2">
                 <button 
                   v-for="p in (['low', 'medium', 'high', 'urgent'] as Ticket['priority'][])" 
                   :key="p"
                   @click="toggleFilter('priority', p)"
-                  :class="['px-2 py-1 rounded text-[10px] font-bold capitalize transition-colors border', activeFilters.priority.includes(p) ? 'bg-slate-800 text-white border-slate-800' : 'bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300']"
+                  :class="[
+                    'rounded border px-2 py-1 text-[10px] font-bold capitalize transition-colors',
+                    activeFilters.priority.includes(p)
+                      ? 'border-slate-800 bg-slate-800 text-white dark:border-slate-300 dark:bg-slate-200 dark:text-slate-900'
+                      : 'border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-600'
+                  ]"
                 >
                   {{ p }}
                 </button>
@@ -179,19 +186,19 @@ const isFilterActive = computed(() => {
 
             <!-- SLA Status -->
             <div class="mb-4">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">SLA Health</span>
+              <span class="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">SLA Health</span>
               <div class="flex flex-col gap-1">
                 <button 
                   v-for="s in (['overdue', 'urgent', 'on-track'] as const)" 
                   :key="s"
                   @click="toggleFilter('slaStatus', s)"
-                  class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-xs transition-colors"
+                  class="flex items-center justify-between rounded-lg p-2 text-xs transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
                 >
                   <div class="flex items-center gap-2">
                     <AlertCircle v-if="s === 'overdue'" :size="14" class="text-red-500" />
                     <Clock v-else-if="s === 'urgent'" :size="14" class="text-amber-500" />
                     <CheckCircle2 v-else :size="14" class="text-emerald-500" />
-                    <span class="capitalize text-slate-700 font-medium">{{ s.replace('-', ' ') }}</span>
+                    <span class="capitalize font-medium text-slate-700 dark:text-slate-300">{{ s.replace('-', ' ') }}</span>
                   </div>
                   <div v-if="activeFilters.slaStatus.includes(s)" class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                 </button>
@@ -200,16 +207,16 @@ const isFilterActive = computed(() => {
 
             <!-- Assignee -->
             <div v-if="availableAssignees.length" class="mb-2">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Assignee</span>
+              <span class="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Assignee</span>
               <div class="max-h-32 overflow-y-auto space-y-1 custom-scrollbar pr-1">
                 <button 
                   v-for="a in availableAssignees" 
                   :key="a"
                   @click="toggleFilter('assignee', a)"
-                  class="w-full flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-xs transition-colors border border-transparent"
-                  :class="activeFilters.assignee.includes(a) ? 'bg-slate-50 border-slate-100' : ''"
+                  class="flex w-full items-center justify-between rounded-lg border border-transparent p-2 text-xs transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                  :class="activeFilters.assignee.includes(a) ? 'border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-slate-800' : ''"
                 >
-                  <span class="text-slate-700 font-medium">{{ a }}</span>
+                  <span class="font-medium text-slate-700 dark:text-slate-300">{{ a }}</span>
                   <div v-if="activeFilters.assignee.includes(a)" class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                 </button>
               </div>
@@ -254,5 +261,13 @@ const isFilterActive = computed(() => {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(203, 213, 225, 0.7);
+}
+
+:global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.6);
+}
+
+:global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
 }
 </style>
