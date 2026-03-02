@@ -50,11 +50,11 @@ const handleMoveTicket = async (
 </script>
 
 <template>
-  <div class="flex h-screen w-full overflow-hidden text-app-text">
+  <div class="flex h-dvh w-full min-h-0 overflow-hidden text-app-text">
     <Sidebar :current-view="currentView" @set-view="setView" />
-    <main class="flex-1 p-8 overflow-y-auto h-full">
+    <main class="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 scrollbar-app">
       <template v-if="currentView === 'dashboard'">
-        <header class="mb-8">
+        <header class="mb-6 lg:mb-8">
           <h1 class="text-2xl font-extrabold">Dashboard Overview</h1>
           <p class="text-app-muted">
             Welcome back, here is what's happening with tickets.
@@ -90,21 +90,23 @@ const handleMoveTicket = async (
       </template>
 
       <template v-else-if="currentView === 'kanban'">
-        <header class="mb-8 flex justify-between items-end">
-          <div>
-            <h1 class="text-2xl font-extrabold">Kanban Board</h1>
-            <p class="text-app-muted">
-              Track and manage ticket statuses and SLA.
-            </p>
-          </div>
-        </header>
+        <section class="flex min-h-[32rem] flex-col">
+          <header class="mb-6 flex justify-between items-end lg:mb-8">
+            <div>
+              <h1 class="text-2xl font-extrabold">Kanban Board</h1>
+              <p class="text-app-muted">
+                Track and manage ticket statuses and SLA.
+              </p>
+            </div>
+          </header>
 
-        <div class="h-[calc(100%-100px)]">
-          <KanbanBoard
-            :tickets="tickets"
-            @move-ticket="handleMoveTicket"
-          />
-        </div>
+          <div class="min-h-[22rem] flex-1">
+            <KanbanBoard
+              :tickets="tickets"
+              @move-ticket="handleMoveTicket"
+            />
+          </div>
+        </section>
       </template>
     </main>
   </div>

@@ -152,7 +152,7 @@ const toggleSort = (type: typeof sortBy.value) => {
     </div>
 
     <!-- Column Content -->
-    <div v-if="!isCollapsed" class="flex-1 p-3 overflow-y-auto space-y-3 custom-scrollbar bg-transparent">
+    <div v-if="!isCollapsed" class="flex-1 min-h-0 overflow-y-auto space-y-3 bg-transparent p-3 scrollbar-app">
       <transition-group 
         name="list" 
         tag="div"
@@ -176,20 +176,6 @@ const toggleSort = (type: typeof sortBy.value) => {
 </template>
 
 <style scoped>
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(203, 213, 225, 0.5);
-  border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
-}
-
 .list-move,
 .list-enter-active,
 .list-leave-active {

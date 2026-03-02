@@ -125,4 +125,27 @@
     border-radius: var(--radius-app);
     box-shadow: var(--shadow-app-card);
   }
+
+  .scrollbar-app {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.55) transparent;
+  }
+
+  .scrollbar-app::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-app::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-app::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.55);
+    border-radius: 9999px;
+  }
+
+  .scrollbar-app::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.65);
+  }
 }
