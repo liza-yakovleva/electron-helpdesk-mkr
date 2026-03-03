@@ -87,38 +87,24 @@ const openEditModal = (ticketId: string) => {
     <main class="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 scrollbar-app">
       
       <template v-if="currentView === 'dashboard'">
-        <header class="mb-6 lg:mb-8">
-          <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
-          <p class="text-app-muted">
-            Швидкий пошук, фільтрація та перегляд великого обсягу тікетів.
-          </p>
-        </header>
+  <header class="mb-6 lg:mb-8 flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
+      <p class="text-app-muted">Швидкий пошук та перегляд тікетів.</p>
+    </div>
+    <button 
+      @click="showTicketForm = true"
+      class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg hover:bg-blue-700 transition-all"
+    >
+      <Plus :size="18" /> New Ticket
+    </button>
+  </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div class="app-card p-6">
-            <h3 class="font-semibold text-app-muted mb-2">Open Tickets</h3>
-            <p class="text-3xl font-bold italic">
-              {{ tickets.filter(t => t.status === 'open').length }}
-            </p>
-          </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    </div>
 
-          <div class="app-card p-6">
-            <h3 class="font-semibold text-app-danger mb-2">High Priority</h3>
-            <p class="text-3xl font-bold text-app-danger">
-              {{ tickets.filter(t => t.priority === 'high' || t.priority === 'urgent').length }}
-            </p>
-          </div>
-
-          <div class="app-card p-6">
-            <h3 class="font-semibold text-app-success mb-2">Total Tickets</h3>
-            <p class="text-3xl font-bold text-app-success">
-              {{ tickets.length }}
-            </p>
-          </div>
-        </div>
-
-        <TicketList :tickets="tickets" />
-      </template>
+  <TicketList :tickets="tickets" />
+</template>
 
       <template v-else-if="currentView === 'kanban'">
         <section class="flex min-h-[32rem] flex-col">

@@ -1,3 +1,51 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import type { Ticket } from '../../../shared/types'
+
+const props = defineProps<{
+  ticket: Ticket
+}>()
+
+const emit = defineEmits<{
+  (e: 'edit-ticket', ticketId: string): void
+}>()
+
+const priorityClass = computed(() => {
+  switch (props.ticket.priority) {
+    case 'urgent': return 'text-red-600 border-red-200 bg-red-100'
+    case 'high': return 'text-orange-600 border-orange-200 bg-orange-100'
+    case 'medium': return 'text-amber-600 border-amber-200 bg-amber-100'
+    default: return 'text-green-600 border-green-200 bg-green-100'
+  }
+})
+
+const slaLabel = computed(() => {
+  const now = new Date()
+  const deadlineDate = new Date(props.ticket.deadline)
+  const diff = deadlineDate.getTime() - now.getTime()
+  if (diff < 0) return 'Overdue'
+  if (diff < 12 * 60 * 60 * 1000) return 'Urgent'
+  return 'On track'
+})
+
+const slaClass = computed(() => {
+  const lbl = slaLabel.value.toLowerCase()
+  if (lbl === 'overdue') return 'bg-red-100 text-red-700'
+  if (lbl === 'urgent') return 'bg-amber-100 text-amber-700'
+  return 'bg-green-100 text-green-700'
+})
+
+const formatDate = (iso: string) => {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return iso
+  return d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
+const handleDragStart = (e: DragEvent) => {
+  e.dataTransfer?.setData('ticketId', props.ticket.id)
+}
+</script>
+
 <template>
   <div 
     draggable="true"

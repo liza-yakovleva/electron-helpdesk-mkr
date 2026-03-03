@@ -98,7 +98,6 @@ const submitForm = async () => {
   }
   
   try {
-    // @ts-ignore
     const updatedTickets = await window.api.saveTicket(updatedTicket)
     emit('submit', updatedTickets)
   } catch (error) {
@@ -111,7 +110,6 @@ const submitForm = async () => {
 const deleteTicket = async () => {
   isDeleting.value = true
   try {
-    // @ts-ignore
     const updatedTickets = await window.api.deleteTicket(props.ticket.id)
     emit('submit', updatedTickets)
   } catch (error) {

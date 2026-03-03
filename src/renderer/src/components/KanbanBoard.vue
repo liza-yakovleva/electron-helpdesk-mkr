@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { Ticket } from '../types';
+import type { Ticket } from '../../../shared/types';
 import KanbanColumn from './KanbanColumn.vue';
 import { Search, Filter, X, ChevronDown, CheckCircle2, Clock, AlertCircle, Plus } from 'lucide-vue-next';
 
@@ -115,48 +115,16 @@ const isFilterActive = computed(() => {
   <div class="flex flex-col h-full bg-transparent">
     <div class="mb-6 flex flex-wrap items-center gap-3">
       <div class="group relative order-1 min-w-[16rem] flex-1">
-        <Search 
-          class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-blue-500 dark:text-slate-500" 
-          :size="18" 
-        />
-        <input 
-          v-model="searchQuery"
-          type="text" 
-          placeholder="Search tickets..." 
-          class="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm text-slate-800 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-        />
-        <button v-if="searchQuery" @click="searchQuery = ''; debouncedSearchQuery = ''" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400">
-          <X :size="14" />
-        </button>
-      </div>
-
-      <div class="relative order-2 shrink-0">
-        <button 
-          @click="showFilters = !showFilters"
-          :class="[
-            'flex items-center gap-2 px-3 py-2 border rounded-lg text-sm transition-all shadow-sm',
-            showFilters || isFilterActive ? 'border-blue-200 bg-blue-50 text-blue-600 dark:bg-blue-500/15' : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-700'
-          ]"
-        >
-          <Filter :size="16" />
-          Filters
-          <span v-if="isFilterActive" class="w-2 h-2 rounded-full bg-blue-500"></span>
-        </button>
-
-        <div v-if="showFilters" class="absolute left-0 z-50 mt-2 w-72 rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900">
-          <div class="flex justify-between items-center mb-4">
-            <h4 class="text-sm font-bold dark:text-slate-100">Filters</h4>
-            <button @click="resetFilters" class="text-blue-600 text-[10px] font-bold uppercase">Reset All</button>
-          </div>
-          </div>
+        <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" :size="18" />
+        <input v-model="searchQuery" type="text" placeholder="Search tickets..." class="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm dark:bg-slate-900 dark:text-white" />
       </div>
 
       <button 
-        @click="$emit('open-ticket-form')"
-        class="order-3 shrink-0 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-700 active:scale-95"
+        @click="$emit('open-ticket-form')" 
+        type="button"
+        class="relative z-10 order-3 shrink-0 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg hover:bg-blue-700 active:scale-95"
       >
-        <Plus :size="18" />
-        New Ticket
+        <Plus :size="18" /> New Ticket
       </button>
     </div>
 
@@ -165,10 +133,9 @@ const isFilterActive = computed(() => {
         <KanbanColumn 
           v-for="status in statuses" 
           :key="status" 
-          :title="status"
           :status="status"
           :tickets="filterTicketsByStatus(status)"
-          @move-ticket="(id, status) => $emit('move-ticket', id, status)"
+          @move-ticket="(id, s) => $emit('move-ticket', id, s)"
           @edit-ticket="(id) => $emit('edit-ticket', id)"
         />
       </div>

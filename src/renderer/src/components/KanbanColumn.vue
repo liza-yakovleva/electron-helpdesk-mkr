@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Ticket } from '../types';
+import type { Ticket } from '../../../shared/types';
 import KanbanCard from './KanbanCard.vue';
 import { MoreVertical, ArrowUpDown, Clock, Calendar, Minimize2, Maximize2 } from 'lucide-vue-next';
 
