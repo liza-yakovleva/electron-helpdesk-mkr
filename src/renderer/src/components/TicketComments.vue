@@ -19,6 +19,7 @@ import { QUICK_TEMPLATES } from '../constants/templates' // Імпорт шаб�
 
 const props = defineProps<{
   ticketId: string
+  ticketTitle: string
 }>()
 
 const emit = defineEmits<{
@@ -70,7 +71,7 @@ const addComment = () => {
           </div>
           <div>
             <h2 class="text-lg font-bold text-slate-800">Коментарі</h2>
-            <p class="text-xs text-slate-500">Тікет ID: {{ ticketId }}</p>
+            <p class="text-xs text-slate-500">{{ ticketTitle }}</p>
           </div>
         </div>
         <button @click.stop="emit('close')" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg transition-colors">

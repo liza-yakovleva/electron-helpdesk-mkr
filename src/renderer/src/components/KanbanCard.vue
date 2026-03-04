@@ -110,7 +110,8 @@ const handleDragStart = (e: DragEvent) => {
     </div>
     <TicketComments 
       v-if="showCommentsModal" 
-      :ticketId="ticket.id" 
+      :ticketId="ticket.id"
+      :ticketTitle="ticket.title" 
       @close="showCommentsModal = false" 
     />
   </div>
