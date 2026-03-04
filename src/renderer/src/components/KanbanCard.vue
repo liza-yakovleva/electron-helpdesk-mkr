@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue' 
 import type { Ticket } from '../../../shared/types'
+import { MessageSquare } from 'lucide-vue-next'
+import TicketComments from './TicketComments.vue'
 
 const props = defineProps<{
   ticket: Ticket
 }>()
+
+const showCommentsModal = ref(false) 
 
 const emit = defineEmits<{
   (e: 'edit-ticket', ticketId: string): void
@@ -83,16 +87,32 @@ const handleDragStart = (e: DragEvent) => {
         </span>
       </div>
 
-      <div :class="['flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold uppercase shadow-sm', slaClass]">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>
-        {{ slaLabel }}
+      <div class="flex items-center gap-2">
+        <button 
+          @click.stop="showCommentsModal = true"
+          class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+          title="Коментарі"
+        >
+          <MessageSquare :size="14" />
+        </button>
+
+        <div :class="['flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold uppercase shadow-sm', slaClass]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          {{ slaLabel }}
+        </div>
       </div>
     </div>
     
     <div class="mt-2 flex justify-between text-[10px] text-slate-400 dark:text-slate-500">
       <span>Deadline: {{ formatDate(ticket.deadline) }}</span>
     </div>
+    <TicketComments 
+      v-if="showCommentsModal" 
+      :ticketId="ticket.id"
+      :ticketTitle="ticket.title" 
+      @close="showCommentsModal = false" 
+    />
   </div>
 </template>
