@@ -109,7 +109,7 @@ const openEditModal = (ticketId: string) => {
       @toggle-theme="toggleTheme" 
     />
     
-    <main class="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 scrollbar-app">
+    <main class="flex min-h-0 flex-1 flex-col overflow-hidden px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
       
       <template v-if="currentView === 'dashboard'">
         <header class="mb-6 flex justify-between items-center">
@@ -128,7 +128,7 @@ const openEditModal = (ticketId: string) => {
       </template>
 
       <template v-else-if="currentView === 'kanban'">
-        <section class="flex min-h-full flex-col">
+        <section class="flex h-full flex-col">
           <header class="mb-6">
             <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Kanban Board</h1>
             <p class="text-app-muted">Керуйте статусами тікетів та відстежуйте SLA.</p>

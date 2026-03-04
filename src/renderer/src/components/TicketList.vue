@@ -49,7 +49,7 @@ const formatCreatedAt = (value: string) => {
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="scrollbar-app flex min-h-0 flex-1 flex-col space-y-4 overflow-y-auto pb-4">
     <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
       <div class="grid gap-3 md:grid-cols-3">
         <input
