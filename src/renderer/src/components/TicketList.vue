@@ -46,6 +46,26 @@ const formatCreatedAt = (value: string) => {
     minute: '2-digit'
   })
 }
+const getPriorityLabel = (p: string) => {
+  switch (p) {
+    case 'low': return 'Низький'
+    case 'medium': return 'Середній'
+    case 'high': return 'Високий'
+    case 'urgent': return 'Терміновий'
+    default: return p
+  }
+}
+
+const getStatusLabel = (s: string) => {
+  switch (s) {
+    case 'new': return 'Новий'
+    case 'open': return 'Відкрито'
+    case 'pending': return 'Очікування'
+    case 'solved': return 'Вирішено'
+    case 'closed': return 'Закрито'
+    default: return s
+  }
+}
 </script>
 
 <template>
@@ -69,7 +89,7 @@ const formatCreatedAt = (value: string) => {
             :value="priority"
             class="capitalize"
           >
-            {{ priority }}
+            {{ getPriorityLabel(priority) }}
           </option>
         </select>
 
@@ -84,7 +104,7 @@ const formatCreatedAt = (value: string) => {
             :value="status"
             class="capitalize"
           >
-            {{ status }}
+            {{ getStatusLabel(status) }}
           </option>
         </select>
       </div>
@@ -112,8 +132,8 @@ const formatCreatedAt = (value: string) => {
               <td class="border-b border-slate-200 px-4 py-3 font-medium text-slate-900 dark:border-slate-700 dark:text-slate-100">
                 {{ ticket.title }}
               </td>
-              <td class="border-b border-slate-200 px-4 py-3 capitalize dark:border-slate-700">{{ ticket.status }}</td>
-              <td class="border-b border-slate-200 px-4 py-3 capitalize dark:border-slate-700">{{ ticket.priority }}</td>
+              <td class="border-b border-slate-200 px-4 py-3 dark:border-slate-700">{{ getStatusLabel(ticket.status) }}</td>
+              <td class="border-b border-slate-200 px-4 py-3 dark:border-slate-700">{{ getPriorityLabel(ticket.priority) }}</td>
               <td class="border-b border-slate-200 px-4 py-3 text-slate-600 dark:border-slate-700 dark:text-slate-400">
                 {{ formatCreatedAt(ticket.createdAt) }}
               </td>
@@ -129,4 +149,5 @@ const formatCreatedAt = (value: string) => {
     </div>
   </div>
 </template>
+
 

@@ -91,7 +91,15 @@ const handleDragStart = (e: DragEvent) => {
           priorityClass
         ]"
       >
-        {{ ticket.priority }}
+        {{
+          ticket.priority === 'low'
+            ? 'Низький'
+            : ticket.priority === 'medium'
+              ? 'Середній'
+              : ticket.priority === 'high'
+                ? 'Високий'
+                : 'Терміновий'
+        }}
       </span>
     </div>
 

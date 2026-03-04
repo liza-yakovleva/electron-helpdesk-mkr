@@ -1,7 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { auditStore } from '../store/auditStore'
-import { ClipboardList } from 'lucide-vue-next'
+import { ClipboardList, RefreshCw } from 'lucide-vue-next'
+
+const isRefreshing = ref(false)
+
+const refreshLogs = async () => {
+  isRefreshing.value = true
+  try {
+    await auditStore.loadLogs()
+  } finally {
+    setTimeout(() => { isRefreshing.value = false }, 500)
+  }
+}
 
 onMounted(async () => {
   await auditStore.loadLogs()
@@ -19,9 +30,19 @@ const getActionColor = (action: string) => {
 
 <template>
   <section class="flex flex-col h-full animate-in fade-in duration-500">
-    <header class="mb-8">
-      <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Audit Log</h1>
-      <p class="text-app-muted">Історія всіх ключових дій у системі.</p>
+    <header class="mb-8 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Журнал аудиту</h1>
+        <p class="text-app-muted">Історія всіх ключових дій у системі.</p>
+      </div>
+      <button 
+        @click="refreshLogs"
+        class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+        title="Оновити журнал"
+      >
+        <RefreshCw :size="16" :class="{ 'animate-spin': isRefreshing }" />
+        Оновити
+      </button>
     </header>
 
     <div class="flex-1 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
