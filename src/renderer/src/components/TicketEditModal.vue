@@ -121,7 +121,7 @@ const deleteTicket = async () => {
 
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/55 p-4 backdrop-blur-sm">
-    <div class="w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/5 animate-in fade-in zoom-in-95 duration-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:ring-white/10">
+    <div class="app-modal-panel w-full max-w-xl overflow-hidden shadow-2xl ring-1 ring-slate-900/5 animate-in fade-in zoom-in-95 duration-200 dark:text-slate-100 dark:ring-white/10">
       
       <!-- Header -->
       <div class="relative flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-sky-50 via-white to-indigo-50 px-6 py-5 dark:border-slate-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
@@ -150,21 +150,21 @@ const deleteTicket = async () => {
 
       <!-- Body / Form -->
       <div class="max-h-[65vh] overflow-y-auto bg-slate-50/70 p-6 dark:bg-slate-950/40">
-        <form @submit.prevent="submitForm" class="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
-          
+        <form @submit.prevent="submitForm" class="app-section space-y-5 p-5">
+                    
           <!-- Title -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">
+            <label class="app-field-label">
               Title <span class="text-red-500">*</span>
             </label>
             <input 
               v-model="form.title" 
               type="text" 
               :class="[
-                'w-full rounded-xl border px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 bg-white dark:bg-slate-950 dark:text-slate-100', 
+                'app-input', 
                 errors.title 
-                  ? 'border-red-300 text-red-900 focus:ring-red-200 placeholder-red-300' 
-                  : 'border-slate-300 focus:ring-blue-100 focus:border-blue-500 placeholder-slate-400 dark:border-slate-600 dark:placeholder-slate-500'
+                  ? 'border-red-300 text-red-900 focus:border-red-500 focus:ring-red-200 placeholder-red-300' 
+                  : ''
               ]"
             />
             <p v-if="errors.title" class="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -175,17 +175,17 @@ const deleteTicket = async () => {
 
           <!-- Description -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">
+            <label class="app-field-label">
               Description <span class="text-red-500">*</span>
             </label>
             <textarea 
               v-model="form.description" 
               rows="4"
               :class="[
-                'w-full rounded-xl border px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 resize-none bg-white dark:bg-slate-950 dark:text-slate-100', 
+                'app-textarea', 
                 errors.description 
-                  ? 'border-red-300 text-red-900 focus:ring-red-200 placeholder-red-300' 
-                  : 'border-slate-300 focus:ring-blue-100 focus:border-blue-500 placeholder-slate-400 dark:border-slate-600 dark:placeholder-slate-500'
+                  ? 'border-red-300 text-red-900 focus:border-red-500 focus:ring-red-200 placeholder-red-300' 
+                  : ''
               ]"
             ></textarea>
             <p v-if="errors.description" class="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -196,17 +196,17 @@ const deleteTicket = async () => {
 
           <!-- Assignee -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">
+            <label class="app-field-label">
               Assignee <span class="text-red-500">*</span>
             </label>
             <input 
               v-model="form.assignee" 
               type="text" 
               :class="[
-                'w-full rounded-xl border px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 bg-white dark:bg-slate-950 dark:text-slate-100', 
+                'app-input', 
                 errors.assignee 
-                  ? 'border-red-300 text-red-900 focus:ring-red-200 placeholder-red-300' 
-                  : 'border-slate-300 focus:ring-blue-100 focus:border-blue-500 placeholder-slate-400 dark:border-slate-600 dark:placeholder-slate-500'
+                  ? 'border-red-300 text-red-900 focus:border-red-500 focus:ring-red-200 placeholder-red-300' 
+                  : ''
               ]"
             />
             <p v-if="errors.assignee" class="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -215,13 +215,13 @@ const deleteTicket = async () => {
             </p>
           </div>
 
-          <!-- Grid for Priority & Category -->
+                    <!-- Grid for Priority & Category -->
           <div class="grid grid-cols-2 gap-5">
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">Priority</label>
+              <label class="app-field-label">Priority</label>
               <select 
                 v-model="form.priority" 
-                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-500/20"
+                class="app-select"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -230,10 +230,10 @@ const deleteTicket = async () => {
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">Category</label>
+              <label class="app-field-label">Category</label>
               <select 
                 v-model="form.category" 
-                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-500/20"
+                class="app-select"
               >
                 <option value="hardware">Hardware</option>
                 <option value="software">Software</option>
@@ -243,19 +243,19 @@ const deleteTicket = async () => {
             </div>
           </div>
 
-          <!-- Deadline -->
+                    <!-- Deadline -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">
+            <label class="app-field-label">
               Deadline <span class="text-red-500">*</span>
             </label>
             <input 
               v-model="form.deadline" 
               type="datetime-local" 
               :class="[
-                'w-full rounded-xl border px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 bg-white dark:bg-slate-950 dark:text-slate-100', 
+                'app-input', 
                 errors.deadline 
-                  ? 'border-red-300 text-red-900 focus:ring-red-200' 
-                  : 'border-slate-300 focus:ring-blue-100 focus:border-blue-500 dark:border-slate-600'
+                  ? 'border-red-300 text-red-900 focus:border-red-500 focus:ring-red-200' 
+                  : ''
               ]"
             />
             <p v-if="errors.deadline" class="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -271,14 +271,14 @@ const deleteTicket = async () => {
         <button 
           @click="emit('close')" 
           type="button"
-          class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+          class="app-btn-secondary px-5 py-2.5 text-sm"
         >
           Cancel
         </button>
         <button 
           @click="submitForm" 
           :disabled="isSubmitting"
-          class="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
+          class="app-btn-primary flex items-center gap-2 px-5 py-2.5 text-sm shadow-md shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <span v-if="isSubmitting" class="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full"></span>
           <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
@@ -288,3 +288,4 @@ const deleteTicket = async () => {
     </div>
   </div>
 </template>
+

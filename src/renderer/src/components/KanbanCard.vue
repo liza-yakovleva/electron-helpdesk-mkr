@@ -55,7 +55,7 @@ const handleDragStart = (e: DragEvent) => {
     draggable="true"
     @dragstart="handleDragStart"
     @click="emit('edit-ticket', ticket.id)"
-    class="group mb-3 cursor-pointer rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md hover:border-blue-300 active:cursor-grabbing dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-500/50"
+    class="app-card group mb-3 cursor-pointer p-4 transition-all hover:shadow-md hover:border-blue-300 active:cursor-grabbing dark:hover:border-blue-500/50"
   >
     <div class="flex justify-between items-start mb-2">
       <span class="text-xs font-mono font-bold text-slate-400 transition-colors group-hover:text-blue-600 dark:text-slate-500">

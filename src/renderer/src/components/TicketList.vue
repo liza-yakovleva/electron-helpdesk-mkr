@@ -50,17 +50,17 @@ const formatCreatedAt = (value: string) => {
 
 <template>
   <div class="space-y-4">
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div class="app-card p-4">
       <div class="grid gap-3 md:grid-cols-3">
         <input
           v-model="searchQuery"
           placeholder="Пошук за назвою або ID..."
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400"
+          class="app-input"
         />
 
         <select
           v-model="selectedPriority"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm capitalize text-slate-800 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400"
+          class="app-select capitalize"
         >
           <option value="all">Всі пріоритети</option>
           <option
@@ -75,7 +75,7 @@ const formatCreatedAt = (value: string) => {
 
         <select
           v-model="selectedStatus"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm capitalize text-slate-800 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400"
+          class="app-select capitalize"
         >
           <option value="all">Всі статуси</option>
           <option
@@ -90,7 +90,7 @@ const formatCreatedAt = (value: string) => {
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div class="app-card overflow-hidden">
       <div class="overflow-x-auto">
         <table class="min-w-full border-collapse text-left text-sm">
           <thead class="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">

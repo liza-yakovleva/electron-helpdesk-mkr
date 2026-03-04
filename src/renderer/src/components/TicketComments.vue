@@ -71,7 +71,7 @@ onMounted(() => {
     class="fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-[110] backdrop-blur-sm" 
     style="-webkit-app-region: no-drag;"
   >
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200 dark:bg-slate-900 dark:text-slate-100">
+    <div class="app-modal-panel w-full max-w-2xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200 dark:text-slate-100">
       
       <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl shrink-0 dark:border-slate-700 dark:bg-slate-800">
         <div class="flex items-center gap-3">
@@ -91,7 +91,7 @@ onMounted(() => {
       <div class="p-6 overflow-y-auto flex-1 bg-white rounded-b-xl dark:bg-slate-900">
         <div class="flex flex-col gap-8">
           
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm shrink-0 dark:border-slate-700 dark:bg-slate-800/50">
+          <div class="app-section p-5 shrink-0">
             <div class="space-y-4">
               
               <div>
@@ -113,11 +113,11 @@ onMounted(() => {
 
               <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">Автор <span class="text-red-500">*</span></label>
-                <input v-model="author" type="text" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100" />
+                <input v-model="author" type="text" class="app-input" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">Текст коментаря <span class="text-red-500">*</span></label>
-                <textarea v-model="text" rows="3" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100" placeholder="Напишіть щось або виберіть шаблон..."></textarea>
+                <textarea v-model="text" rows="3" class="app-textarea" placeholder="Напишіть щось або виберіть шаблон..."></textarea>
               </div>
             </div>
 

@@ -116,7 +116,7 @@ const isFilterActive = computed(() => {
     <div class="mb-6 flex flex-wrap items-center gap-3">
       <div class="group relative order-1 min-w-[16rem] flex-1">
         <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" :size="18" />
-        <input v-model="searchQuery" type="text" placeholder="Search tickets..." class="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500" />
+        <input v-model="searchQuery" type="text" placeholder="Search tickets..." class="app-input app-input-with-icon placeholder:text-slate-400 dark:placeholder:text-slate-500" />
       </div>
 
       <button 

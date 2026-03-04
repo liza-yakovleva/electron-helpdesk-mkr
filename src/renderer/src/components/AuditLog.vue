@@ -24,7 +24,7 @@ const getActionColor = (action: string) => {
       <p class="text-app-muted">Історія всіх ключових дій у системі.</p>
     </header>
 
-    <div class="flex-1 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="app-card flex-1 overflow-hidden">
       <div class="h-full overflow-y-auto scrollbar-app">
         <table class="w-full text-left text-sm border-separate border-spacing-0">
           <thead class="sticky top-0 bg-slate-50 dark:bg-slate-800 text-slate-500 font-bold uppercase text-[10px] tracking-wider z-10">

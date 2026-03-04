@@ -159,6 +159,100 @@
     box-shadow: var(--shadow-app-card);
   }
 
+  .app-modal-panel {
+    background: var(--app-surface-solid);
+    border: 1px solid var(--app-border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-app-card);
+  }
+
+  .app-section {
+    background: color-mix(in oklab, var(--app-surface-solid) 88%, transparent);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius-app-lg);
+    box-shadow: var(--shadow-app-soft);
+  }
+
+  .app-field-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+  }
+
+  .app-input,
+  .app-select,
+  .app-textarea {
+    width: 100%;
+    border: 1px solid var(--app-border);
+    border-radius: 0.75rem;
+    background: var(--app-surface-solid);
+    color: var(--app-text);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+    transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  }
+
+  .app-input,
+  .app-select {
+    min-height: 2.625rem;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .app-input-with-icon {
+    padding-left: 2.5rem;
+    padding-right: 1rem;
+  }
+
+  .app-textarea {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    resize: none;
+  }
+
+  .app-input:focus,
+  .app-select:focus,
+  .app-textarea:focus {
+    outline: none;
+    border-color: var(--app-primary);
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--app-primary) 20%, transparent),
+      0 1px 2px rgb(15 23 42 / 0.12);
+  }
+
+  .app-btn-primary {
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    background: var(--app-primary);
+    color: #fff;
+    font-weight: 700;
+    transition: filter 160ms ease, transform 160ms ease, opacity 160ms ease;
+  }
+
+  .app-btn-primary:hover {
+    filter: brightness(0.94);
+  }
+
+  .app-btn-primary:active {
+    transform: translateY(1px);
+  }
+
+  .app-btn-secondary {
+    border-radius: 0.75rem;
+    border: 1px solid var(--app-border);
+    background: var(--app-surface-solid);
+    color: var(--app-text);
+    font-weight: 600;
+    transition: background-color 160ms ease, transform 160ms ease;
+  }
+
+  .app-btn-secondary:hover {
+    background: color-mix(in oklab, var(--app-surface-solid) 86%, #e2e8f0 14%);
+  }
+
   .scrollbar-app {
     scrollbar-width: thin;
     scrollbar-color: rgba(148, 163, 184, 0.55) transparent;
