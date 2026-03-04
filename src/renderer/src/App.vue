@@ -15,6 +15,8 @@ const theme = ref<'light' | 'dark'>('light')
 const showTicketForm = ref(false)
 const editingTicket = ref<Ticket | null>(null)
 const tickets = ref<Ticket[]>([])
+const isLoadingTickets = ref(true)
+const ticketsLoadError = ref<string | null>(null)
 
 const setView = (view: 'dashboard' | 'kanban' | 'audit') => {
   currentView.value = view
@@ -32,6 +34,22 @@ const applyTheme = (nextTheme: 'light' | 'dark') => {
 
 const toggleTheme = () => {
   applyTheme(theme.value === 'dark' ? 'light' : 'dark')
+}
+
+const loadTickets = async () => {
+  isLoadingTickets.value = true
+  ticketsLoadError.value = null
+
+  try {
+    tickets.value = await window.api.getTickets()
+  } catch (error) {
+    const details = error instanceof Error ? error.message : String(error)
+    ticketsLoadError.value = `Failed to read tickets data. ${details}`
+    tickets.value = []
+    console.error('Failed to load tickets:', error)
+  } finally {
+    isLoadingTickets.value = false
+  }
 }
 
 onMounted(async () => {
@@ -52,11 +70,7 @@ onMounted(async () => {
 
   applyTheme(initialTheme)
 
-  try {
-    tickets.value = await window.api.getTickets()
-  } catch (error) {
-    console.error('Failed to load tickets:', error)
-  }
+  await loadTickets()
 })
 
 const handleMoveTicket = async (ticketId: string, newStatus: Ticket['status']) => {
@@ -119,7 +133,31 @@ const openEditModal = (ticketId: string) => {
     
     <main class="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 scrollbar-app">
       
-      <template v-if="currentView === 'dashboard'">
+      <template v-if="isLoadingTickets">
+        <section class="app-card animate-pulse p-6">
+          <div class="mb-6 h-8 w-52 rounded bg-slate-200 dark:bg-slate-700"></div>
+          <div class="mb-4 h-10 w-full rounded-xl bg-slate-200 dark:bg-slate-700"></div>
+          <div class="space-y-3">
+            <div class="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700"></div>
+            <div class="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700"></div>
+            <div class="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700"></div>
+          </div>
+          <p class="mt-5 text-sm font-semibold text-slate-500 dark:text-slate-400">Loading...</p>
+        </section>
+      </template>
+
+      <template v-else-if="ticketsLoadError">
+        <section class="app-card p-6">
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-slate-100">Cannot load tickets</h2>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">{{ ticketsLoadError }}</p>
+          <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+            Перевірте валідність JSON у файлі тікетів і спробуйте ще раз.
+          </p>
+          <button @click="loadTickets" class="app-btn-primary mt-5 px-4 py-2 text-sm">Retry</button>
+        </section>
+      </template>
+
+      <template v-else-if="currentView === 'dashboard'">
         <header class="mb-6 flex justify-between items-center">
           <div>
             <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
@@ -158,13 +196,13 @@ const openEditModal = (ticketId: string) => {
       </template>
 
       <TicketForm 
-        v-if="showTicketForm" 
+        v-if="!isLoadingTickets && !ticketsLoadError && showTicketForm" 
         @close="showTicketForm = false" 
         @submit="handleTicketCreated" 
       />
       
       <TicketEditModal
-        v-if="editingTicket"
+        v-if="!isLoadingTickets && !ticketsLoadError && editingTicket"
         :ticket="editingTicket"
         @close="editingTicket = null"
         @submit="handleTicketEdited"
