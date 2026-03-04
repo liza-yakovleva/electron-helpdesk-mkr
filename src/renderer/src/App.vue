@@ -27,14 +27,22 @@ const applyTheme = (nextTheme: 'light' | 'dark') => {
   localStorage.setItem('theme', nextTheme)
 }
 
+const getPreferredTheme = (): 'light' | 'dark' => {
+  const savedTheme = localStorage.getItem('theme')
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  return savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : systemPrefersDark ? 'dark' : 'light'
+}
+
 const toggleTheme = () => {
   applyTheme(theme.value === 'dark' ? 'light' : 'dark')
 }
 
+if (typeof window !== 'undefined') {
+  applyTheme(getPreferredTheme())
+}
+
 onMounted(async () => {
-  const savedTheme = localStorage.getItem('theme')
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  applyTheme(savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : systemPrefersDark ? 'dark' : 'light')
+  applyTheme(getPreferredTheme())
 
   try {
     tickets.value = await window.api.getTickets()
@@ -92,7 +100,7 @@ const openEditModal = (ticketId: string) => {
 </script>
 
 <template>
-  <div class="flex h-dvh w-full min-h-0 overflow-hidden bg-slate-50 text-app-text transition-colors dark:bg-slate-950 dark:text-slate-100 font-sans">
+  <div class="flex h-dvh w-full min-h-0 overflow-hidden bg-app-bg text-app-text transition-colors font-sans">
     
     <Sidebar 
       :current-view="currentView" 
