@@ -5,30 +5,17 @@ import KanbanBoard from './components/KanbanBoard.vue'
 import TicketList from './components/TicketList.vue'
 import TicketForm from './components/TicketForm.vue'
 import TicketEditModal from './components/TicketEditModal.vue'
-import type { Ticket } from '../../shared/types'
 import AuditLog from './components/AuditLog.vue' 
+import { auditStore } from './store/auditStore' // Переконайся, що шлях правильний
+import type { Ticket } from '../../shared/types'
 import { Plus } from 'lucide-vue-next'
 
 const currentView = ref<'dashboard' | 'kanban' | 'audit'>('kanban')
 const theme = ref<'light' | 'dark'>('light')
 const showTicketForm = ref(false)
 const editingTicket = ref<Ticket | null>(null)
-
 const tickets = ref<Ticket[]>([])
 
-const logActivity = async (ticketId: string, details: string) => {
-  try {
-    await window.api.saveLog({
-      id: Date.now().toString(),
-      ticketId,
-      details,
-      user: 'Володимир (QA)', // Тут можна брати активного юзера
-      timestamp: new Date().toLocaleString('uk-UA')
-    })
-  } catch (e) {
-    console.error("Logging failed", e)
-  }
-}
 const setView = (view: 'dashboard' | 'kanban' | 'audit') => {
   currentView.value = view
 }
@@ -64,8 +51,7 @@ const handleMoveTicket = async (ticketId: string, newStatus: Ticket['status']) =
 
     try {
       tickets.value = await window.api.saveTicket(updatedTicket)
-      // Логуємо подію
-      await logActivity(ticketId, `Змінено статус: ${oldStatus} -> ${newStatus}`)
+      auditStore.addLog(ticketId, `Змінено статус: ${oldStatus} -> ${newStatus}`)
     } catch (error) {
       console.error('Failed to save ticket:', error)
     }
@@ -73,17 +59,27 @@ const handleMoveTicket = async (ticketId: string, newStatus: Ticket['status']) =
 }
 
 const handleTicketCreated = (updatedTickets: Ticket[]) => {
+  // Знаходимо новий тікет для логування
+  const newTicket = updatedTickets.find(nt => !tickets.value.some(t => t.id === nt.id))
   tickets.value = updatedTickets
   showTicketForm.value = false
-  const newTicket = updatedTickets[updatedTickets.length - 1]
-  logActivity(newTicket.id, 'Створено новий тікет')
+  if (newTicket) {
+    auditStore.addLog(newTicket.id, 'Створено новий тікет')
+  }
 }
 
 const handleTicketEdited = (updatedTickets: Ticket[]) => {
   const ticketId = editingTicket.value?.id
+  const wasDeleted = !updatedTickets.some(t => t.id === ticketId)
+  
   tickets.value = updatedTickets
+  
   if (ticketId) {
-    logActivity(ticketId, 'Відредаговано дані тікета')
+    if (wasDeleted) {
+      auditStore.addLog(ticketId, 'Видалено тікет')
+    } else {
+      auditStore.addLog(ticketId, 'Відредаговано дані тікета')
+    }
   }
   editingTicket.value = null
 }
@@ -97,43 +93,41 @@ const openEditModal = (ticketId: string) => {
 </script>
 
 <template>
-  <div class="flex h-dvh w-full min-h-0 overflow-hidden bg-slate-50 text-app-text transition-colors dark:bg-slate-950 dark:text-slate-100">
-    <Sidebar :current-view="currentView" :theme="theme" @set-view="setView" @toggle-theme="toggleTheme" />
+  <div class="flex h-dvh w-full min-h-0 overflow-hidden bg-slate-50 text-app-text transition-colors dark:bg-slate-950 dark:text-slate-100 font-sans">
+    
+    <Sidebar 
+      :current-view="currentView" 
+      :theme="theme" 
+      @set-view="setView" 
+      @toggle-theme="toggleTheme" 
+    />
     
     <main class="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 scrollbar-app">
       
       <template v-if="currentView === 'dashboard'">
-  <header class="mb-6 lg:mb-8 flex justify-between items-center">
-    <div>
-      <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
-      <p class="text-app-muted">Швидкий пошук та перегляд тікетів.</p>
-    </div>
-    <button 
-      @click="showTicketForm = true"
-      class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg hover:bg-blue-700 transition-all"
-    >
-      <Plus :size="18" /> New Ticket
-    </button>
-  </header>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    </div>
-
-  <TicketList :tickets="tickets" />
-</template>
+        <header class="mb-6 flex justify-between items-center">
+          <div>
+            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ticket Table View</h1>
+            <p class="text-app-muted">Швидкий пошук та перегляд тікетів у таблиці.</p>
+          </div>
+          <button 
+            @click="showTicketForm = true"
+            class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg hover:bg-blue-700 transition-all active:scale-95"
+          >
+            <Plus :size="18" /> New Ticket
+          </button>
+        </header>
+        <TicketList :tickets="tickets" />
+      </template>
 
       <template v-else-if="currentView === 'kanban'">
-        <section class="flex min-h-[32rem] flex-col">
-          <header class="mb-6 flex justify-between items-end lg:mb-8">
-            <div>
-              <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Kanban Board</h1>
-              <p class="text-app-muted">
-                Track and manage ticket statuses and SLA.
-              </p>
-            </div>
+        <section class="flex min-h-full flex-col">
+          <header class="mb-6">
+            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Kanban Board</h1>
+            <p class="text-app-muted">Керуйте статусами тікетів та відстежуйте SLA.</p>
           </header>
 
-          <div class="min-h-[22rem] flex-1">
+          <div class="flex-1 min-h-0">
             <KanbanBoard
               :tickets="tickets"
               @move-ticket="handleMoveTicket"

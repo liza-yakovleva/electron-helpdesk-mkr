@@ -1,5 +1,6 @@
 <script lang="ts">
 import { ref } from 'vue'
+import { auditStore } from '../store/auditStore'
 
 interface Comment {
   id: string
@@ -53,7 +54,9 @@ const addComment = () => {
   }
 
   globalCommentsStore.value.push(newComment)
-  text.value = '' 
+  auditStore.addLog(props.ticketId, `Додано коментар: "${text.value.substring(0, 40)}..."`)
+  text.value = ''
+   
 }
 </script>
 

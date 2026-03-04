@@ -1,34 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { auditStore } from '../store/auditStore'
 import { ClipboardList } from 'lucide-vue-next'
 
-// Тестові дані
-const logs = ref([
-  {
-    id: '1',
-    ticketId: 'INC-4821',
-    details: 'Створено новий тікет',
-    timestamp: '04.03.2026, 10:15:30'
-  },
-  {
-    id: '2',
-    ticketId: 'INC-4821',
-    details: 'Змінено статус: new -> open',
-    timestamp: '04.03.2026, 11:20:05'
-  },
-  {
-    id: '3',
-    ticketId: 'INC-9012',
-    details: 'Додано коментар: "Потрібні лог-файли сервера"',
-    timestamp: '04.03.2026, 12:45:12'
-  },
-  {
-    id: '4',
-    ticketId: 'INC-2233',
-    details: 'Видалено тікет',
-    timestamp: '04.03.2026, 14:00:00'
-  }
-])
 
 onMounted(async () => {
   try {
@@ -69,7 +43,11 @@ const getActionColor = (action: string) => {
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            <tr v-for="log in logs" :key="log.id" class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+            <tr 
+              v-for="log in auditStore.logs" 
+              :key="log.id" 
+              class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
+            >
               <td class="px-6 py-4">
                 <span :class="['px-2 py-1 rounded-md font-medium text-xs whitespace-nowrap', getActionColor(log.details)]">
                   {{ log.details }}
@@ -85,7 +63,7 @@ const getActionColor = (action: string) => {
           </tbody>
         </table>
 
-        <div v-if="logs.length === 0" class="flex flex-col items-center justify-center py-20 text-slate-400">
+        <div v-if="auditStore.logs.length === 0" class="flex flex-col items-center justify-center py-20 text-slate-400">
           <ClipboardList :size="48" class="opacity-20 mb-4" />
           <p>Журнал аудиту порожній</p>
         </div>
