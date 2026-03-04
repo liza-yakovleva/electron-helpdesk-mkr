@@ -9,13 +9,13 @@ interface Comment {
   createdAt: string
 }
 
-// Тепер цей масив став "синглтоном" — він один на всю програму і не видаляється
 const globalCommentsStore = ref<Comment[]>([])
 </script>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Send, MessageSquare, Clock, X } from 'lucide-vue-next'
+import { Send, MessageSquare, Clock, X, Zap } from 'lucide-vue-next' // Додано Zap
+import { QUICK_TEMPLATES } from '../constants/templates' // Імпорт шаблонів
 
 const props = defineProps<{
   ticketId: string
@@ -28,7 +28,11 @@ const emit = defineEmits<{
 const author = ref('Support Agent')
 const text = ref('')
 
-// Логіка фільтрації залишається такою ж, але тепер вона працює зі стабільним сховищем
+// Функція для швидкої відповіді
+const applyTemplate = (templateText: string) => {
+  text.value = templateText
+}
+
 const filteredComments = computed(() => {
   return globalCommentsStore.value
     .filter(c => c.ticketId === props.ticketId)
@@ -37,7 +41,6 @@ const filteredComments = computed(() => {
 
 const addComment = () => {
   console.log('Додаємо коментар для тікета:', props.ticketId)
-
   if (!text.value.trim() || !author.value.trim()) return
 
   const newComment: Comment = {
@@ -80,13 +83,31 @@ const addComment = () => {
           
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm shrink-0">
             <div class="space-y-4">
+              
+              <div>
+                <label class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                  Швидкі відповіді
+                </label>
+                <div class="flex flex-wrap gap-2">
+                  <button 
+                    v-for="tpl in QUICK_TEMPLATES" 
+                    :key="tpl.label"
+                    @click="applyTemplate(tpl.text)"
+                    type="button"
+                    class="text-[11px] px-3 py-1.5 bg-white border border-slate-200 rounded-full hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all shadow-sm active:scale-95"
+                  >
+                    {{ tpl.label }}
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Автор <span class="text-red-500">*</span></label>
                 <input v-model="author" type="text" class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Текст коментаря <span class="text-red-500">*</span></label>
-                <textarea v-model="text" rows="3" class="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Напишіть щось..."></textarea>
+                <textarea v-model="text" rows="3" class="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Напишіть щось або виберіть шаблон..."></textarea>
               </div>
             </div>
 
