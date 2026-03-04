@@ -1,22 +1,14 @@
 <script lang="ts">
-import { ref } from 'vue'
-import { auditStore } from '../store/auditStore'
-
-interface Comment {
-  id: string
-  ticketId: string
-  author: string
-  text: string
-  createdAt: string
-}
-
-const globalCommentsStore = ref<Comment[]>([])
+import type { Comment } from '../../shared/types'
+export type { Comment }
 </script>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Send, MessageSquare, Clock, X, Zap } from 'lucide-vue-next' // Додано Zap
-import { QUICK_TEMPLATES } from '../constants/templates' // Імпорт шаблонів
+import { ref, computed, onMounted } from 'vue'
+import { Send, MessageSquare, Clock, X } from 'lucide-vue-next'
+import { QUICK_TEMPLATES } from '../constants/templates'
+import type { Comment } from '../../shared/types'
+import { auditStore } from '../store/auditStore'
 
 const props = defineProps<{
   ticketId: string
@@ -29,6 +21,7 @@ const emit = defineEmits<{
 
 const author = ref('Support Agent')
 const text = ref('')
+const comments = ref<Comment[]>([])
 
 // Функція для швидкої відповіді
 const applyTemplate = (templateText: string) => {
@@ -36,12 +29,22 @@ const applyTemplate = (templateText: string) => {
 }
 
 const filteredComments = computed(() => {
-  return globalCommentsStore.value
+  return comments.value
     .filter(c => c.ticketId === props.ticketId)
-    .sort((a, b) => b.id.localeCompare(a.id))
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
 })
 
-const addComment = () => {
+const loadComments = async () => {
+  try {
+    const allComments = await window.api.getComments(props.ticketId)
+    comments.value = allComments
+  } catch (error) {
+    console.error('Помилка при завантаженні коментарів:', error)
+    comments.value = []
+  }
+}
+
+const addComment = async () => {
   console.log('Додаємо коментар для тікета:', props.ticketId)
   if (!text.value.trim() || !author.value.trim()) return
 
@@ -50,14 +53,22 @@ const addComment = () => {
     ticketId: props.ticketId,
     author: author.value.trim(),
     text: text.value.trim(),
-    createdAt: new Date().toLocaleString()
+    createdAt: new Date().toISOString()
   }
 
-  globalCommentsStore.value.push(newComment)
-  auditStore.addLog(props.ticketId, `Додано коментар: "${text.value.substring(0, 40)}..."`)
-  text.value = ''
-   
+  try {
+    const savedComments = await window.api.addComment(newComment)
+    comments.value = savedComments
+    auditStore.addLog(props.ticketId, `Додано коментар: "${text.value.substring(0, 40)}..."`)
+    text.value = ''
+  } catch (error) {
+    console.error('Помилка при збереженні коментаря:', error)
+  }
 }
+
+onMounted(() => {
+  loadComments()
+})
 </script>
 
 <template>
@@ -138,7 +149,7 @@ const addComment = () => {
             <div v-for="comment in filteredComments" :key="comment.id" class="border-l-2 border-blue-400 pl-4 py-2 animate-in slide-in-from-top-2">
               <div class="flex items-center gap-2 mb-1">
                 <span class="font-bold text-sm text-slate-800">{{ comment.author }}</span>
-                <span class="text-[11px] text-slate-400">{{ comment.createdAt }}</span>
+                <span class="text-[11px] text-slate-400">{{ new Date(comment.createdAt).toLocaleString() }}</span>
               </div>
               <p class="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed">{{ comment.text }}</p>
             </div>

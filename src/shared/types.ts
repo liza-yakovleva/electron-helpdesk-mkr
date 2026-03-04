@@ -35,6 +35,15 @@ export interface Ticket {
   deadline: string              // ISO string (SLA)
 }
 
+// ===== Comments =====
+export interface Comment {
+  id: string
+  ticketId: string
+  author: string
+  text: string
+  createdAt: string
+}
+
 // ===== Audit Log =====
 export interface AuditEvent {
   id: string
