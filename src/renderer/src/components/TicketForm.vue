@@ -72,58 +72,61 @@ const submitForm = async () => {
 </script>
 
 <template>
-  <div class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-[100] backdrop-blur-sm">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200 text-slate-900">
-      <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-white">
-        <div>
-          <h2 class="text-xl font-bold">New Ticket</h2>
-          <p class="text-sm text-slate-500 mt-1">Fill out the details below.</p>
+  <div class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/55 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-2xl ring-1 ring-slate-900/5 animate-in fade-in zoom-in-95 duration-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:ring-white/10">
+      <div class="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-blue-50 via-white to-indigo-50 px-6 py-5 dark:border-slate-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 dark:border-blue-500/30 dark:bg-blue-500/20 dark:text-blue-300">
+            New ticket
+          </div>
+          <h2 class="text-xl font-extrabold tracking-tight">Create Service Request</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Заповніть ключові дані, щоб команда швидко взяла задачу в роботу.</p>
         </div>
-        <button @click="emit('close')" class="text-slate-400 hover:text-slate-600 p-2"><X :size="20" /></button>
+        <button @click="emit('close')" class="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200"><X :size="20" /></button>
       </div>
 
-      <div class="p-6 overflow-y-auto flex-1 bg-slate-50/50">
-        <form @submit.prevent="submitForm" class="space-y-4 text-left">
+      <div class="max-h-[65vh] overflow-y-auto bg-slate-50/70 p-6 dark:bg-slate-950/40">
+        <form @submit.prevent="submitForm" class="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
           <div>
-            <label class="block text-sm font-medium mb-1">Title <span class="text-red-500">*</span></label>
-            <input v-model="form.title" type="text" :class="['w-full rounded-lg border px-4 py-2 text-sm', errors.title ? 'border-red-500' : 'border-slate-300']" />
+            <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300">Title <span class="text-red-500">*</span></label>
+            <input v-model="form.title" type="text" placeholder="Наприклад: Не працює VPN" :class="['w-full rounded-xl border bg-white px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 dark:bg-slate-950 dark:text-slate-100', errors.title ? 'border-red-500 focus:ring-red-200' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100 dark:border-slate-600 dark:focus:border-blue-400 dark:focus:ring-blue-500/20']" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1">Description <span class="text-red-500">*</span></label>
-            <textarea v-model="form.description" rows="3" :class="['w-full rounded-lg border px-4 py-2 text-sm resize-none', errors.description ? 'border-red-500' : 'border-slate-300']"></textarea>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300">Description <span class="text-red-500">*</span></label>
+            <textarea v-model="form.description" rows="3" placeholder="Опишіть проблему, кроки відтворення та вплив" :class="['w-full resize-none rounded-xl border bg-white px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 dark:bg-slate-950 dark:text-slate-100', errors.description ? 'border-red-500 focus:ring-red-200' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100 dark:border-slate-600 dark:focus:border-blue-400 dark:focus:ring-blue-500/20']"></textarea>
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1">Assignee <span class="text-red-500">*</span></label>
-            <input v-model="form.assignee" type="text" class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm" />
+            <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300">Assignee <span class="text-red-500">*</span></label>
+            <input v-model="form.assignee" type="text" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-500/20" />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium mb-1">Priority</label>
-              <select v-model="form.priority" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white">
+              <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300">Priority</label>
+              <select v-model="form.priority" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-500/20">
                 <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="urgent">Urgent</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium mb-1">Category</label>
-              <select v-model="form.category" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white">
+              <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300">Category</label>
+              <select v-model="form.category" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-500/20">
                 <option value="hardware">Hardware</option><option value="software">Software</option><option value="network">Network</option><option value="other">Other</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1">Deadline <span class="text-red-500">*</span></label>
-            <input v-model="form.deadline" type="datetime-local" :class="['w-full rounded-lg border px-4 py-2 text-sm', errors.deadline ? 'border-red-500' : 'border-slate-300']" />
+            <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300">Deadline <span class="text-red-500">*</span></label>
+            <input v-model="form.deadline" type="datetime-local" :class="['w-full rounded-xl border bg-white px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 dark:bg-slate-950 dark:text-slate-100', errors.deadline ? 'border-red-500 focus:ring-red-200' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100 dark:border-slate-600 dark:focus:border-blue-400 dark:focus:ring-blue-500/20']" />
           </div>
         </form>
       </div>
 
-      <div class="p-5 border-t border-slate-200 bg-white flex justify-end gap-3">
-        <button @click="emit('close')" class="px-5 py-2 text-sm font-medium border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
-        <button @click="submitForm" :disabled="isSubmitting" class="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50">
+      <div class="flex justify-end gap-3 border-t border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
+        <button @click="emit('close')" class="rounded-xl border border-slate-300 px-5 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Cancel</button>
+        <button @click="submitForm" :disabled="isSubmitting" class="rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-colors hover:bg-blue-700 disabled:opacity-50">
           {{ isSubmitting ? 'Saving...' : 'Save Ticket' }}
         </button>
       </div>

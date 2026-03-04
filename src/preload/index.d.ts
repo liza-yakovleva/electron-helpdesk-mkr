@@ -11,6 +11,8 @@ declare global {
       addComment: (comment: import('../shared/types').Comment) => Promise<import('../shared/types').Comment[]>
       getAuditLogs: (ticketId?: string) => Promise<import('../shared/types').AuditEvent[]>
       addAuditLog: (log: import('../shared/types').AuditEvent) => Promise<import('../shared/types').AuditEvent[]>
+      setThemeSource: (theme: 'light' | 'dark' | 'system') => Promise<'light' | 'dark'>
+      getEffectiveTheme: () => Promise<'light' | 'dark'>
     }
   }
 }

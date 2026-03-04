@@ -50,17 +50,17 @@ const formatCreatedAt = (value: string) => {
 
 <template>
   <div class="space-y-4">
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
       <div class="grid gap-3 md:grid-cols-3">
         <input
           v-model="searchQuery"
           placeholder="Пошук за назвою або ID..."
-          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none transition-colors focus:border-blue-500"
+          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400"
         />
 
         <select
           v-model="selectedPriority"
-          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm capitalize outline-none transition-colors focus:border-blue-500"
+          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm capitalize text-slate-800 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400"
         >
           <option value="all">Всі пріоритети</option>
           <option
@@ -75,7 +75,7 @@ const formatCreatedAt = (value: string) => {
 
         <select
           v-model="selectedStatus"
-          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm capitalize outline-none transition-colors focus:border-blue-500"
+          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm capitalize text-slate-800 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-400"
         >
           <option value="all">Всі статуси</option>
           <option
@@ -90,36 +90,36 @@ const formatCreatedAt = (value: string) => {
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
       <div class="overflow-x-auto">
         <table class="min-w-full border-collapse text-left text-sm">
-          <thead class="bg-slate-100 text-slate-700">
+          <thead class="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
             <tr>
-              <th class="border-b border-slate-200 px-4 py-3 font-semibold">ID</th>
-              <th class="border-b border-slate-200 px-4 py-3 font-semibold">Заголовок</th>
-              <th class="border-b border-slate-200 px-4 py-3 font-semibold">Статус</th>
-              <th class="border-b border-slate-200 px-4 py-3 font-semibold">Пріоритет</th>
-              <th class="border-b border-slate-200 px-4 py-3 font-semibold">Дата створення</th>
+              <th class="border-b border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">ID</th>
+              <th class="border-b border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Заголовок</th>
+              <th class="border-b border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Статус</th>
+              <th class="border-b border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Пріоритет</th>
+              <th class="border-b border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Дата створення</th>
             </tr>
           </thead>
           <tbody>
             <tr
               v-for="ticket in filteredTickets"
               :key="ticket.id"
-              class="transition-colors hover:bg-slate-50"
+              class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60"
             >
-              <td class="border-b border-slate-200 px-4 py-3 font-mono text-xs">{{ ticket.id }}</td>
-              <td class="border-b border-slate-200 px-4 py-3 font-medium text-slate-900">
+              <td class="border-b border-slate-200 px-4 py-3 font-mono text-xs dark:border-slate-700">{{ ticket.id }}</td>
+              <td class="border-b border-slate-200 px-4 py-3 font-medium text-slate-900 dark:border-slate-700 dark:text-slate-100">
                 {{ ticket.title }}
               </td>
-              <td class="border-b border-slate-200 px-4 py-3 capitalize">{{ ticket.status }}</td>
-              <td class="border-b border-slate-200 px-4 py-3 capitalize">{{ ticket.priority }}</td>
-              <td class="border-b border-slate-200 px-4 py-3 text-slate-600">
+              <td class="border-b border-slate-200 px-4 py-3 capitalize dark:border-slate-700">{{ ticket.status }}</td>
+              <td class="border-b border-slate-200 px-4 py-3 capitalize dark:border-slate-700">{{ ticket.priority }}</td>
+              <td class="border-b border-slate-200 px-4 py-3 text-slate-600 dark:border-slate-700 dark:text-slate-400">
                 {{ formatCreatedAt(ticket.createdAt) }}
               </td>
             </tr>
             <tr v-if="filteredTickets.length === 0">
-              <td colspan="5" class="px-4 py-8 text-center text-slate-500">
+              <td colspan="5" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">
                 За поточними фільтрами тікетів не знайдено.
               </td>
             </tr>
@@ -129,3 +129,4 @@ const formatCreatedAt = (value: string) => {
     </div>
   </div>
 </template>
+

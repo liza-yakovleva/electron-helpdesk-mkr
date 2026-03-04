@@ -25,6 +25,9 @@ const applyTheme = (nextTheme: 'light' | 'dark') => {
   document.documentElement.classList.toggle('dark', nextTheme === 'dark')
   document.documentElement.style.colorScheme = nextTheme
   localStorage.setItem('theme', nextTheme)
+  window.api.setThemeSource(nextTheme).catch((error) => {
+    console.error('Failed to sync theme with native window:', error)
+  })
 }
 
 const toggleTheme = () => {
@@ -33,8 +36,21 @@ const toggleTheme = () => {
 
 onMounted(async () => {
   const savedTheme = localStorage.getItem('theme')
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  applyTheme(savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : systemPrefersDark ? 'dark' : 'light')
+  const savedThemeValue = savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : null
+
+  let initialTheme: 'light' | 'dark'
+  if (savedThemeValue) {
+    initialTheme = savedThemeValue
+  } else {
+    try {
+      initialTheme = await window.api.getEffectiveTheme()
+    } catch {
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      initialTheme = systemPrefersDark ? 'dark' : 'light'
+    }
+  }
+
+  applyTheme(initialTheme)
 
   try {
     tickets.value = await window.api.getTickets()

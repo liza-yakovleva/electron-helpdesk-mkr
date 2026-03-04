@@ -71,31 +71,31 @@ onMounted(() => {
     class="fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-[110] backdrop-blur-sm" 
     style="-webkit-app-region: no-drag;"
   >
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200 dark:bg-slate-900 dark:text-slate-100">
       
-      <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl shrink-0">
+      <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl shrink-0 dark:border-slate-700 dark:bg-slate-800">
         <div class="flex items-center gap-3">
-          <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
+          <div class="bg-blue-100 p-2 rounded-lg text-blue-600 dark:bg-blue-500/20 dark:text-blue-300">
             <MessageSquare :size="20" />
           </div>
           <div>
-            <h2 class="text-lg font-bold text-slate-800">Коментарі</h2>
-            <p class="text-xs text-slate-500">{{ ticketTitle }}</p>
+            <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100">Коментарі</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">{{ ticketTitle }}</p>
           </div>
         </div>
-        <button @click.stop="emit('close')" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg transition-colors">
+        <button @click.stop="emit('close')" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg transition-colors dark:hover:text-slate-200">
           <X :size="20" />
         </button>
       </div>
 
-      <div class="p-6 overflow-y-auto flex-1 bg-white rounded-b-xl">
+      <div class="p-6 overflow-y-auto flex-1 bg-white rounded-b-xl dark:bg-slate-900">
         <div class="flex flex-col gap-8">
           
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm shrink-0">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm shrink-0 dark:border-slate-700 dark:bg-slate-800/50">
             <div class="space-y-4">
               
               <div>
-                <label class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                <label class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 dark:text-slate-500">
                   Швидкі відповіді
                 </label>
                 <div class="flex flex-wrap gap-2">
@@ -104,7 +104,7 @@ onMounted(() => {
                     :key="tpl.label"
                     @click="applyTemplate(tpl.text)"
                     type="button"
-                    class="text-[11px] px-3 py-1.5 bg-white border border-slate-200 rounded-full hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all shadow-sm active:scale-95"
+                    class="text-[11px] px-3 py-1.5 bg-white border border-slate-200 rounded-full hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all shadow-sm active:scale-95 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-blue-500/15 dark:hover:text-blue-300"
                   >
                     {{ tpl.label }}
                   </button>
@@ -112,12 +112,12 @@ onMounted(() => {
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">Автор <span class="text-red-500">*</span></label>
-                <input v-model="author" type="text" class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">Автор <span class="text-red-500">*</span></label>
+                <input v-model="author" type="text" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100" />
               </div>
               <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">Текст коментаря <span class="text-red-500">*</span></label>
-                <textarea v-model="text" rows="3" class="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Напишіть щось або виберіть шаблон..."></textarea>
+                <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">Текст коментаря <span class="text-red-500">*</span></label>
+                <textarea v-model="text" rows="3" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100" placeholder="Напишіть щось або виберіть шаблон..."></textarea>
               </div>
             </div>
 
@@ -133,20 +133,20 @@ onMounted(() => {
           </div>
 
           <div class="space-y-4">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2 dark:border-slate-700 dark:text-slate-500">
               <Clock :size="14" /> Історія ({{ filteredComments.length }})
             </h3>
             
             <div v-if="filteredComments.length === 0" class="text-center py-6">
-              <p class="text-sm text-slate-400 italic">Для цього тікета ще немає коментарів.</p>
+              <p class="text-sm text-slate-400 italic dark:text-slate-500">Для цього тікета ще немає коментарів.</p>
             </div>
 
             <div v-for="comment in filteredComments" :key="comment.id" class="border-l-2 border-blue-400 pl-4 py-2 animate-in slide-in-from-top-2">
               <div class="flex items-center gap-2 mb-1">
-                <span class="font-bold text-sm text-slate-800">{{ comment.author }}</span>
-                <span class="text-[11px] text-slate-400">{{ new Date(comment.createdAt).toLocaleString() }}</span>
+                <span class="font-bold text-sm text-slate-800 dark:text-slate-100">{{ comment.author }}</span>
+                <span class="text-[11px] text-slate-400 dark:text-slate-500">{{ new Date(comment.createdAt).toLocaleString() }}</span>
               </div>
-              <p class="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed">{{ comment.text }}</p>
+              <p class="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed dark:text-slate-300">{{ comment.text }}</p>
             </div>
           </div>
 
@@ -155,3 +155,5 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+

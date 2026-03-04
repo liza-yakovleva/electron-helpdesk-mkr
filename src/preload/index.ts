@@ -18,5 +18,8 @@ contextBridge.exposeInMainWorld('api', {
   getComments: (ticketId: string): Promise<Comment[]> => ipcRenderer.invoke('get-comments', ticketId),
   addComment: (comment: Comment): Promise<Comment[]> => ipcRenderer.invoke('add-comment', comment),
   getAuditLogs: (ticketId?: string): Promise<AuditEvent[]> => ipcRenderer.invoke('get-audit-logs', ticketId),
-  addAuditLog: (log: AuditEvent): Promise<AuditEvent[]> => ipcRenderer.invoke('add-audit-log', log)
+  addAuditLog: (log: AuditEvent): Promise<AuditEvent[]> => ipcRenderer.invoke('add-audit-log', log),
+  setThemeSource: (theme: 'light' | 'dark' | 'system'): Promise<'light' | 'dark'> =>
+    ipcRenderer.invoke('set-theme-source', theme),
+  getEffectiveTheme: (): Promise<'light' | 'dark'> => ipcRenderer.invoke('get-effective-theme')
 })
