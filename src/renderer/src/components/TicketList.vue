@@ -60,7 +60,7 @@ const formatCreatedAt = (value: string) => {
 
         <select
           v-model="selectedPriority"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm capitalize text-slate-900 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400"
+          class="app-select w-full rounded-md border border-slate-300 bg-white py-2 pl-3 pr-9 text-sm capitalize text-slate-900 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400"
         >
           <option value="all">Всі пріоритети</option>
           <option
@@ -75,7 +75,7 @@ const formatCreatedAt = (value: string) => {
 
         <select
           v-model="selectedStatus"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm capitalize text-slate-900 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400"
+          class="app-select w-full rounded-md border border-slate-300 bg-white py-2 pl-3 pr-9 text-sm capitalize text-slate-900 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400"
         >
           <option value="all">Всі статуси</option>
           <option
