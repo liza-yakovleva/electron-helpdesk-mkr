@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { Ticket } from '../../../shared/types'
+import { MessageSquare } from 'lucide-vue-next' // ДОДАНО: іконка
+import TicketComments from './TicketComments.vue' // ДОДАНО: компонент коментарів
 
 const props = defineProps<{
   tickets: Ticket[]
 }>()
+
+const showCommentsModal = ref(false)
 
 const searchQuery = ref('')
 const selectedPriority = ref<'all' | Ticket['priority']>('all')
