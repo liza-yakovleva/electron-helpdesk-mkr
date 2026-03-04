@@ -34,7 +34,7 @@ defineEmits<{
         title="Kanban Board"
       >
         <LayoutDashboard :size="20" />
-        <span class="hidden sm:inline">Kanban Board</span>
+        <span class="hidden sm:inline">Панель канбан</span>
       </button>
 
       <button 
@@ -45,10 +45,10 @@ defineEmits<{
             ? 'bg-blue-50 text-blue-700 shadow-sm dark:bg-slate-800 dark:text-white dark:shadow-lg'
             : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
         ]"
-        title="Statistical View"
+        title="Табличний перегляд"
       >
         <Table :size="20" />
-        <span class="hidden sm:inline">Statistical View</span>
+        <span class="hidden sm:inline">Табличний перегляд</span>
       </button>
 
       <button 
@@ -59,10 +59,10 @@ defineEmits<{
             ? 'bg-blue-50 text-blue-700 shadow-sm dark:bg-slate-800 dark:text-white dark:shadow-lg'
             : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
         ]"
-        title="Audit Log"
+        title="Журнал аудиту"
       >
         <ClipboardList :size="20" />
-        <span class="hidden sm:inline">Audit Log</span>
+        <span class="hidden sm:inline">Журнал аудиту</span>
       </button>
     </nav>
 
@@ -70,7 +70,7 @@ defineEmits<{
       <button @click="$emit('toggle-theme')" class="flex w-full items-center justify-center gap-3 rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 sm:justify-start">
         <Moon v-if="theme === 'light'" :size="18" />
         <Sun v-else :size="18" />
-        <span class="hidden sm:inline">{{ theme === 'light' ? 'Dark Mode' : 'Light Mode' }}</span>
+        <span class="hidden sm:inline">{{ theme === 'light' ? 'Темна тема' : 'Світла тема' }}</span>
       </button>
       
       <div class="flex items-center justify-center gap-3 p-2 sm:justify-start">

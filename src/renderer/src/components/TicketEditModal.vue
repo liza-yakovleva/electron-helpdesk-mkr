@@ -26,7 +26,7 @@ const errors = reactive({
   description: false,
   assignee: false,
   deadline: false,
-  deadlineMsg: 'Please specify a valid deadline'
+  deadlineMsg: 'Будь ласка, вкажіть коректний термін'
 })
 
 const isSubmitting = ref(false)
@@ -59,14 +59,14 @@ const validate = () => {
   
   if (!form.deadline) {
     errors.deadline = true
-    errors.deadlineMsg = 'Please specify a deadline'
+    errors.deadlineMsg = 'Будь ласка, вкажіть термін'
     isValid = false
   } else {
     const deadlineDate = new Date(form.deadline)
     const now = new Date()
     if (deadlineDate <= now) {
       errors.deadline = true
-      errors.deadlineMsg = 'Deadline must be in the future'
+      errors.deadlineMsg = 'Термін має бути в майбутньому'
       isValid = false
     } else {
       errors.deadline = false
@@ -120,42 +120,42 @@ const deleteTicket = async () => {
 </script>
 
 <template>
-  <div class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-[100] backdrop-blur-sm">
-    <div class="w-full max-w-lg max-h-[90vh] overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-xl animate-in fade-in zoom-in-95 duration-200 flex flex-col dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+  <div class="fixed inset-0 flex items-center justify-center bg-slate-900/50 p-4 z-[100] backdrop-blur-sm">
+    <div class="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-xl animate-in fade-in zoom-in-95 duration-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
       
       <!-- Header -->
-      <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-white relative dark:border-slate-700 dark:bg-slate-900">
+      <div class="relative flex items-center justify-between border-b border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
         <div class="absolute right-16 top-1/2 -translate-y-1/2">
-           <div v-if="showDeleteConfirm" class="flex items-center gap-2 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100 dark:bg-red-500/10 dark:border-red-500/20">
-             <span class="text-xs font-medium text-red-700 dark:text-red-300">Are you sure?</span>
-             <button @click="deleteTicket" :disabled="isDeleting" class="text-xs font-bold text-white bg-red-600 px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50">Yes</button>
-             <button @click="showDeleteConfirm = false" class="text-xs font-medium text-slate-600 bg-white px-2 py-1 border border-slate-200 rounded hover:bg-slate-50 dark:text-slate-300 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700">No</button>
+           <div v-if="showDeleteConfirm" class="flex items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-1.5 dark:border-red-500/20 dark:bg-red-500/10">
+             <span class="text-xs font-medium text-red-700 dark:text-red-300">Ви впевнені?</span>
+             <button @click="deleteTicket" :disabled="isDeleting" class="rounded bg-red-600 px-2 py-1 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-50">Так</button>
+             <button @click="showDeleteConfirm = false" class="rounded border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">Ні</button>
            </div>
-           <button v-else @click="showDeleteConfirm = true" class="text-red-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50 flex items-center gap-2 dark:hover:bg-red-500/10" title="Delete Ticket">
+           <button v-else @click="showDeleteConfirm = true" class="flex items-center gap-2 rounded-lg p-2 text-red-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10" title="Видалити тікет">
              <Trash2 :size="18" />
            </button>
         </div>
 
         <div>
           <div class="flex items-center gap-3">
-            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Edit Ticket</h2>
-            <span class="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded dark:bg-slate-800 dark:text-slate-300">{{ ticket.id }}</span>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Редагувати тікет</h2>
+            <span class="rounded bg-slate-100 px-2 py-1 font-mono text-xs font-bold text-slate-500 dark:bg-slate-800 dark:text-slate-300">{{ ticket.id }}</span>
           </div>
-          <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Update the ticket information.</p>
+          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Оновіть інформацію про тікет.</p>
         </div>
-        <button @click="emit('close')" class="text-slate-400 hover:text-slate-600 transition-colors p-2 rounded-lg hover:bg-slate-100 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800">
+        <button @click="emit('close')" class="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-300">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
 
       <!-- Body / Form -->
-      <div class="p-6 overflow-y-auto flex-1 bg-slate-50/50 dark:bg-slate-950/40">
+      <div class="flex-1 overflow-y-auto bg-slate-50/50 p-6 dark:bg-slate-950/40">
         <form @submit.prevent="submitForm" class="space-y-4 text-left">
           
           <!-- Title -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">
-              Title <span class="text-red-500">*</span>
+            <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Заголовок <span class="text-red-500">*</span>
             </label>
             <input 
               v-model="form.title" 
@@ -167,16 +167,16 @@ const deleteTicket = async () => {
                   : 'border-slate-300 focus:ring-blue-100 focus:border-blue-500 placeholder-slate-400 dark:border-slate-600 dark:focus:ring-blue-500/20 dark:focus:border-blue-400 dark:placeholder-slate-500'
               ]"
             />
-            <p v-if="errors.title" class="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
+            <p v-if="errors.title" class="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              Title cannot be empty
+              Заголовок не може бути порожнім
             </p>
           </div>
 
           <!-- Description -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">
-              Description <span class="text-red-500">*</span>
+            <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Опис <span class="text-red-500">*</span>
             </label>
             <textarea 
               v-model="form.description" 
@@ -188,16 +188,16 @@ const deleteTicket = async () => {
                   : 'border-slate-300 focus:ring-blue-100 focus:border-blue-500 placeholder-slate-400 dark:border-slate-600 dark:focus:ring-blue-500/20 dark:focus:border-blue-400 dark:placeholder-slate-500'
               ]"
             ></textarea>
-            <p v-if="errors.description" class="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
+            <p v-if="errors.description" class="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              Description must be at least 10 characters long
+              Опис має містити щонайменше 10 символів
             </p>
           </div>
 
           <!-- Assignee -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">
-              Assignee <span class="text-red-500">*</span>
+            <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Виконавець <span class="text-red-500">*</span>
             </label>
             <input 
               v-model="form.assignee" 
@@ -209,44 +209,44 @@ const deleteTicket = async () => {
                   : 'border-slate-300 focus:ring-blue-100 focus:border-blue-500 placeholder-slate-400 dark:border-slate-600 dark:focus:ring-blue-500/20 dark:focus:border-blue-400 dark:placeholder-slate-500'
               ]"
             />
-            <p v-if="errors.assignee" class="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
+            <p v-if="errors.assignee" class="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              Assignee cannot be empty
+              Виконавець не може бути порожнім
             </p>
           </div>
 
           <!-- Grid for Priority & Category -->
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">Priority</label>
+              <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Пріоритет</label>
               <select 
                 v-model="form.priority" 
-                class="app-select w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 bg-white shadow-sm transition-colors dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-500/20 dark:focus:border-blue-400"
+                class="app-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-500/20"
               >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="urgent">Urgent</option>
+                <option value="low">Низький</option>
+                <option value="medium">Середній</option>
+                <option value="high">Високий</option>
+                <option value="urgent">Терміновий</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">Category</label>
+              <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Категорія</label>
               <select 
                 v-model="form.category" 
-                class="app-select w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 bg-white shadow-sm transition-colors dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-blue-500/20 dark:focus:border-blue-400"
+                class="app-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-500/20"
               >
-                <option value="hardware">Hardware</option>
-                <option value="software">Software</option>
-                <option value="network">Network</option>
-                <option value="other">Other</option>
+                <option value="hardware">Залізо</option>
+                <option value="software">Софт</option>
+                <option value="network">Мережа</option>
+                <option value="other">Інше</option>
               </select>
             </div>
           </div>
 
           <!-- Deadline -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-300">
-              Deadline <span class="text-red-500">*</span>
+            <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Термін <span class="text-red-500">*</span>
             </label>
             <input 
               v-model="form.deadline" 
@@ -258,7 +258,7 @@ const deleteTicket = async () => {
                   : 'border-slate-300 focus:ring-blue-100 focus:border-blue-500 dark:border-slate-600 dark:focus:ring-blue-500/20 dark:focus:border-blue-400'
               ]"
             />
-            <p v-if="errors.deadline" class="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
+            <p v-if="errors.deadline" class="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
               {{ errors.deadlineMsg }}
             </p>
@@ -267,26 +267,27 @@ const deleteTicket = async () => {
       </div>
 
       <!-- Footer/Actions -->
-      <div class="p-5 border-t border-slate-200 bg-white flex justify-end gap-3 rounded-b-xl dark:border-slate-700 dark:bg-slate-900">
+      <div class="flex justify-end gap-3 rounded-b-xl border-t border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
         <button 
           @click="emit('close')" 
           type="button"
-          class="px-5 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 transition-colors dark:text-slate-200 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700 dark:focus:ring-slate-500/30"
+          class="rounded-lg border border-slate-300 bg-white px-5 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:focus:ring-slate-500/30"
         >
-          Cancel
+          Скасувати
         </button>
         <button 
           @click="submitForm" 
           :disabled="isSubmitting"
-          class="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2 transition-colors shadow-sm"
+          class="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <span v-if="isSubmitting" class="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full"></span>
+          <span v-if="isSubmitting" class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
           <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-          {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
+          {{ isSubmitting ? 'Збереження...' : 'Зберегти зміни' }}
         </button>
       </div>
     </div>
   </div>
 </template>
+
 
 

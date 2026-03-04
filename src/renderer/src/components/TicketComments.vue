@@ -14,7 +14,7 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const author = ref('Support Agent')
+const author = ref('Агент підтримки')
 const text = ref('')
 const comments = ref<Comment[]>([])
 
