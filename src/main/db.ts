@@ -82,3 +82,17 @@ export function getAuditLogsByTicketId(ticketId: string): AuditEvent[] {
   const logs = getAuditLogs()
   return logs.filter(l => l.ticketId === ticketId)
 }
+
+export function deleteCommentsByTicketId(ticketId: string) {
+  const comments = getComments()
+  const filtered = comments.filter(c => c.ticketId !== ticketId)
+  saveComments(filtered)
+  return filtered
+}
+
+export function deleteAuditLogsByTicketId(ticketId: string) {
+  const logs = getAuditLogs()
+  const filtered = logs.filter(l => l.ticketId !== ticketId)
+  saveAuditLogs(filtered)
+  return filtered
+}

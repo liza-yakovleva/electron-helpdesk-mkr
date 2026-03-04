@@ -7,7 +7,7 @@ import type { Ticket } from '../shared/types'
 // reuse the helper functions defined in db.ts so the storage path is
 // configured in one place. the old implementation used "tickets.json"
 // while the actual file on disk (per user report) is "database.json".
-import { getTickets, saveTickets, getComments, getCommentsByTicketId, addComment, getAuditLogs, addAuditLog, getAuditLogsByTicketId } from './db'
+import { getTickets, saveTickets, getComments, getCommentsByTicketId, addComment, getAuditLogs, addAuditLog, getAuditLogsByTicketId, deleteCommentsByTicketId, deleteAuditLogsByTicketId } from './db'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -48,6 +48,9 @@ app.whenReady().then(() => {
   ipcMain.handle('delete-ticket', (_event, id) => {
     const tickets = getTickets().filter(t => t.id !== id)
     saveTickets(tickets)
+    // Видаляємо також коментарі та логи для цього тікета
+    deleteCommentsByTicketId(id)
+    deleteAuditLogsByTicketId(id)
     return tickets
   })
 
