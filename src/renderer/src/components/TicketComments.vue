@@ -67,9 +67,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div @click.stop 
-    class="fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-[110] backdrop-blur-sm" 
-    style="-webkit-app-region: no-drag;"
+  <div @click.stop @dragstart.prevent.stop
+    class="fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-[110] backdrop-blur-sm"
   >
     <div class="w-full max-w-2xl max-h-[90vh] animate-in zoom-in-95 duration-200 flex flex-col rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
       

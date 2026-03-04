@@ -5,6 +5,7 @@ import KanbanBoard from './components/KanbanBoard.vue'
 import TicketList from './components/TicketList.vue'
 import TicketForm from './components/TicketForm.vue'
 import TicketEditModal from './components/TicketEditModal.vue'
+import TicketComments from './components/TicketComments.vue'
 import AuditLog from './components/AuditLog.vue' 
 import { auditStore } from './store/auditStore' 
 import type { Ticket } from '../../shared/types'
@@ -14,6 +15,7 @@ const currentView = ref<'dashboard' | 'kanban' | 'audit'>('kanban')
 const theme = ref<'light' | 'dark'>('light')
 const showTicketForm = ref(false)
 const editingTicket = ref<Ticket | null>(null)
+const commentingTicket = ref<Ticket | null>(null)
 const tickets = ref<Ticket[]>([])
 const isRefreshing = ref(false)
 
@@ -61,6 +63,12 @@ onMounted(async () => {
   } catch (error) {
     console.error('Failed to load tickets:', error)
   }
+
+  if (window.api.onOpenAddTicket) {
+    window.api.onOpenAddTicket(() => {
+      showTicketForm.value = true
+    })
+  }
 })
 
 const handleMoveTicket = async (ticketId: string, newStatus: Ticket['status']) => {
@@ -107,6 +115,13 @@ const openEditModal = (ticketId: string) => {
   const ticket = tickets.value.find(t => t.id === ticketId)
   if (ticket) {
     editingTicket.value = ticket
+  }
+}
+
+const openCommentsModal = (ticketId: string) => {
+  const ticket = tickets.value.find(t => t.id === ticketId)
+  if (ticket) {
+    commentingTicket.value = ticket
   }
 }
 </script>
@@ -174,6 +189,7 @@ const openEditModal = (ticketId: string) => {
               @move-ticket="handleMoveTicket"
               @open-ticket-form="showTicketForm = true"
               @edit-ticket="openEditModal"
+              @open-comments="openCommentsModal"
             />
           </div>
         </section>
@@ -194,6 +210,13 @@ const openEditModal = (ticketId: string) => {
         :ticket="editingTicket"
         @close="editingTicket = null"
         @submit="handleTicketEdited"
+      />
+
+      <TicketComments
+        v-if="commentingTicket"
+        :ticketId="commentingTicket.id"
+        :ticketTitle="commentingTicket.title"
+        @close="commentingTicket = null"
       />
     </main>
   </div>

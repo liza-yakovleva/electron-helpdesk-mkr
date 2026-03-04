@@ -13,6 +13,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'move-ticket', ticketId: string, newStatus: Ticket['status']): void;
   (e: 'edit-ticket', ticketId: string): void;
+  (e: 'open-comments', ticketId: string): void;
 }>();
 
 const isCollapsed = ref(false);
@@ -195,6 +196,7 @@ const toggleSort = (type: typeof sortBy.value) => {
           :key="ticket.id"
           :ticket="ticket"
           @edit-ticket="(id) => $emit('edit-ticket', id)"
+          @open-comments="(id) => $emit('open-comments', id)"
         />
       </transition-group>
 

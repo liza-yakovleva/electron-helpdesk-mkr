@@ -2,16 +2,14 @@
 import { computed, ref } from 'vue'
 import type { Ticket } from '../../../shared/types'
 import { MessageSquare } from 'lucide-vue-next'
-import TicketComments from './TicketComments.vue'
 
 const props = defineProps<{
   ticket: Ticket
 }>()
 
-const showCommentsModal = ref(false)
-
 const emit = defineEmits<{
   (e: 'edit-ticket', ticketId: string): void
+  (e: 'open-comments', ticketId: string): void
 }>()
 
 const slaStatus = computed(() => {
@@ -134,7 +132,7 @@ const handleDragStart = (e: DragEvent) => {
 
       <div class="flex items-center gap-2">
         <button
-          @click.stop="showCommentsModal = true"
+          @click.stop="emit('open-comments', ticket.id)"
           class="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/10"
           title="Коментарі"
         >
@@ -169,11 +167,5 @@ const handleDragStart = (e: DragEvent) => {
     <div class="mt-2 flex justify-between text-[10px] text-slate-400 dark:text-slate-500">
       <span>Термін: {{ formatDate(ticket.deadline) }}</span>
     </div>
-    <TicketComments
-      v-if="showCommentsModal"
-      :ticketId="ticket.id"
-      :ticketTitle="ticket.title"
-      @close="showCommentsModal = false"
-    />
   </div>
 </template>

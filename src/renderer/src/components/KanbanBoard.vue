@@ -12,6 +12,7 @@ const emit = defineEmits<{
   (e: 'move-ticket', ticketId: string, newStatus: Ticket['status']): void;
   (e: 'open-ticket-form'): void;
   (e: 'edit-ticket', ticketId: string): void;
+  (e: 'open-comments', ticketId: string): void;
 }>();
 
 // --- Search Logic ---
@@ -244,6 +245,7 @@ const isFilterActive = computed(() => {
           :tickets="filterTicketsByStatus(status)"
           @move-ticket="(id, status) => $emit('move-ticket', id, status)"
           @edit-ticket="(id) => $emit('edit-ticket', id)"
+          @open-comments="(id) => $emit('open-comments', id)"
         />
       </div>
     </div>

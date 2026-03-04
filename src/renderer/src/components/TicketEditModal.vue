@@ -12,19 +12,30 @@ const emit = defineEmits<{
   (e: 'submit', tickets: Ticket[]): void
 }>()
 
+const toLocalDatetimeString = (isoString: string) => {
+  if (!isoString) return ''
+  const date = new Date(isoString)
+  if (Number.isNaN(date.getTime())) return ''
+  const tzOffset = date.getTimezoneOffset() * 60000
+  return new Date(date.getTime() - tzOffset).toISOString().slice(0, 16)
+}
+
 const form = reactive({
   title: props.ticket.title,
   description: props.ticket.description,
   assignee: props.ticket.assignee || '',
   priority: props.ticket.priority,
   category: props.ticket.category,
-  deadline: props.ticket.deadline.slice(0, 16) 
+  deadline: toLocalDatetimeString(props.ticket.deadline)
 })
 
 const errors = reactive({
   title: false,
+  titleMsg: '',
   description: false,
+  descriptionMsg: '',
   assignee: false,
+  assigneeMsg: '',
   deadline: false,
   deadlineMsg: 'Будь ласка, вкажіть коректний термін'
 })
@@ -38,13 +49,19 @@ const validate = () => {
   
   if (!form.title.trim()) {
     errors.title = true
+    errors.titleMsg = 'Поле не може бути пустим'
     isValid = false
   } else {
     errors.title = false
   }
   
-  if (form.description.trim().length < 10) {
+  if (!form.description.trim()) {
     errors.description = true
+    errors.descriptionMsg = 'Поле не може бути пустим'
+    isValid = false
+  } else if (form.description.trim().length < 10) {
+    errors.description = true
+    errors.descriptionMsg = 'Опис має містити більше 10 символів'
     isValid = false
   } else {
     errors.description = false
@@ -52,6 +69,7 @@ const validate = () => {
   
   if (!form.assignee.trim()) {
     errors.assignee = true
+    errors.assigneeMsg = 'Поле не може бути пустим'
     isValid = false
   } else {
     errors.assignee = false
@@ -59,7 +77,7 @@ const validate = () => {
   
   if (!form.deadline) {
     errors.deadline = true
-    errors.deadlineMsg = 'Будь ласка, вкажіть термін'
+    errors.deadlineMsg = 'Поле не може бути пустим'
     isValid = false
   } else {
     const deadlineDate = new Date(form.deadline)
@@ -169,7 +187,7 @@ const deleteTicket = async () => {
             />
             <p v-if="errors.title" class="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              Заголовок не може бути порожнім
+              {{ errors.titleMsg }}
             </p>
           </div>
 
@@ -190,7 +208,7 @@ const deleteTicket = async () => {
             ></textarea>
             <p v-if="errors.description" class="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              Опис має містити щонайменше 10 символів
+              {{ errors.descriptionMsg }}
             </p>
           </div>
 
@@ -211,7 +229,7 @@ const deleteTicket = async () => {
             />
             <p v-if="errors.assignee" class="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              Виконавець не може бути порожнім
+              {{ errors.assigneeMsg }}
             </p>
           </div>
 
