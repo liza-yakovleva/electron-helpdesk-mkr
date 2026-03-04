@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { Ticket } from '../../../shared/types'
-import { MessageSquare } from 'lucide-vue-next' // ДОДАНО: іконка
-import TicketComments from './TicketComments.vue' // ДОДАНО: компонент коментарів
+import { MessageSquare } from 'lucide-vue-next' 
+import TicketComments from './TicketComments.vue' 
 
 const props = defineProps<{
   tickets: Ticket[]

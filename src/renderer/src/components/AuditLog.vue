@@ -3,16 +3,8 @@ import { ref, onMounted } from 'vue'
 import { auditStore } from '../store/auditStore'
 import { ClipboardList } from 'lucide-vue-next'
 
-
 onMounted(async () => {
-  try {
-    const realLogs = await window.api.getLogs()
-    if (realLogs && realLogs.length > 0) {
-      logs.value = realLogs
-    }
-  } catch (e) {
-    console.error("Failed to load real logs, showing mock data", e)
-  }
+  await auditStore.loadLogs()
 })
 
 const getActionColor = (action: string) => {

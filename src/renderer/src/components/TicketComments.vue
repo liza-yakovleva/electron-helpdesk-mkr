@@ -1,13 +1,8 @@
-<script lang="ts">
-import type { Comment } from '../../shared/types'
-export type { Comment }
-</script>
-
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { Send, MessageSquare, Clock, X } from 'lucide-vue-next'
 import { QUICK_TEMPLATES } from '../constants/templates'
-import type { Comment } from '../../shared/types'
+import type { Comment } from '../../../shared/types'
 import { auditStore } from '../store/auditStore'
 
 const props = defineProps<{
@@ -23,7 +18,7 @@ const author = ref('Support Agent')
 const text = ref('')
 const comments = ref<Comment[]>([])
 
-// Функція для швидкої відповіді
+
 const applyTemplate = (templateText: string) => {
   text.value = templateText
 }
@@ -59,7 +54,7 @@ const addComment = async () => {
   try {
     const savedComments = await window.api.addComment(newComment)
     comments.value = savedComments
-    auditStore.addLog(props.ticketId, `Додано коментар: "${text.value.substring(0, 40)}..."`)
+    await auditStore.addLog(props.ticketId, `Додано коментар: "${text.value.substring(0, 40)}..."`)
     text.value = ''
   } catch (error) {
     console.error('Помилка при збереженні коментаря:', error)

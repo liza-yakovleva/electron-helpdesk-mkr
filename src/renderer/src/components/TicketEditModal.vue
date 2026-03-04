@@ -18,7 +18,7 @@ const form = reactive({
   assignee: props.ticket.assignee || '',
   priority: props.ticket.priority,
   category: props.ticket.category,
-  deadline: props.ticket.deadline.slice(0, 16) // Convert ISO to datetime-local format (YYYY-MM-DDThh:mm)
+  deadline: props.ticket.deadline.slice(0, 16) 
 })
 
 const errors = reactive({
@@ -64,8 +64,6 @@ const validate = () => {
   } else {
     const deadlineDate = new Date(form.deadline)
     const now = new Date()
-    // It's possible edit happens after deadline, so we might want to allow past dates when editing
-    // But for the user request "та валідацію для строчи дедлайну" we stick to the future validation rule.
     if (deadlineDate <= now) {
       errors.deadline = true
       errors.deadlineMsg = 'Deadline must be in the future'
@@ -127,7 +125,6 @@ const deleteTicket = async () => {
       
       <!-- Header -->
       <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-white relative">
-        <!-- Delete Button -->
         <div class="absolute right-16 top-1/2 -translate-y-1/2">
            <div v-if="showDeleteConfirm" class="flex items-center gap-2 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">
              <span class="text-xs font-medium text-red-700">Are you sure?</span>

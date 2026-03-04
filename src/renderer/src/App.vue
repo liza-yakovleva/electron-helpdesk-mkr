@@ -6,7 +6,7 @@ import TicketList from './components/TicketList.vue'
 import TicketForm from './components/TicketForm.vue'
 import TicketEditModal from './components/TicketEditModal.vue'
 import AuditLog from './components/AuditLog.vue' 
-import { auditStore } from './store/auditStore' // Переконайся, що шлях правильний
+import { auditStore } from './store/auditStore' 
 import type { Ticket } from '../../shared/types'
 import { Plus } from 'lucide-vue-next'
 
@@ -51,24 +51,23 @@ const handleMoveTicket = async (ticketId: string, newStatus: Ticket['status']) =
 
     try {
       tickets.value = await window.api.saveTicket(updatedTicket)
-      auditStore.addLog(ticketId, `Змінено статус: ${oldStatus} -> ${newStatus}`)
+      await auditStore.addLog(ticketId, `Змінено статус: ${oldStatus} -> ${newStatus}`)
     } catch (error) {
       console.error('Failed to save ticket:', error)
     }
   }
 }
 
-const handleTicketCreated = (updatedTickets: Ticket[]) => {
-  // Знаходимо новий тікет для логування
+const handleTicketCreated = async (updatedTickets: Ticket[]) => {
   const newTicket = updatedTickets.find(nt => !tickets.value.some(t => t.id === nt.id))
   tickets.value = updatedTickets
   showTicketForm.value = false
   if (newTicket) {
-    auditStore.addLog(newTicket.id, 'Створено новий тікет')
+    await auditStore.addLog(newTicket.id, 'Створено новий тікет')
   }
 }
 
-const handleTicketEdited = (updatedTickets: Ticket[]) => {
+const handleTicketEdited = async (updatedTickets: Ticket[]) => {
   const ticketId = editingTicket.value?.id
   const wasDeleted = !updatedTickets.some(t => t.id === ticketId)
   
@@ -76,9 +75,9 @@ const handleTicketEdited = (updatedTickets: Ticket[]) => {
   
   if (ticketId) {
     if (wasDeleted) {
-      auditStore.addLog(ticketId, 'Видалено тікет')
+      await auditStore.addLog(ticketId, 'Видалено тікет')
     } else {
-      auditStore.addLog(ticketId, 'Відредаговано дані тікета')
+      await auditStore.addLog(ticketId, 'Відредаговано дані тікета')
     }
   }
   editingTicket.value = null
