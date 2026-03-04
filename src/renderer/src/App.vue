@@ -6,15 +6,30 @@ import TicketList from './components/TicketList.vue'
 import TicketForm from './components/TicketForm.vue'
 import TicketEditModal from './components/TicketEditModal.vue'
 import type { Ticket } from '../../shared/types'
+import AuditLog from './components/AuditLog.vue' 
+import { Plus } from 'lucide-vue-next'
 
-const currentView = ref<'dashboard' | 'kanban'>('kanban')
+const currentView = ref<'dashboard' | 'kanban' | 'audit'>('kanban')
 const theme = ref<'light' | 'dark'>('light')
 const showTicketForm = ref(false)
 const editingTicket = ref<Ticket | null>(null)
 
 const tickets = ref<Ticket[]>([])
 
-const setView = (view: 'dashboard' | 'kanban') => {
+const logActivity = async (ticketId: string, details: string) => {
+  try {
+    await window.api.saveLog({
+      id: Date.now().toString(),
+      ticketId,
+      details,
+      user: 'Володимир (QA)', // Тут можна брати активного юзера
+      timestamp: new Date().toLocaleString('uk-UA')
+    })
+  } catch (e) {
+    console.error("Logging failed", e)
+  }
+}
+const setView = (view: 'dashboard' | 'kanban' | 'audit') => {
   currentView.value = view
 }
 
@@ -41,21 +56,16 @@ onMounted(async () => {
   }
 })
 
-const handleMoveTicket = async (
-  ticketId: string,
-  newStatus: Ticket['status']
-) => {
+const handleMoveTicket = async (ticketId: string, newStatus: Ticket['status']) => {
   const ticketIndex = tickets.value.findIndex(t => t.id === ticketId)
-
   if (ticketIndex !== -1) {
-    const updatedTicket: Ticket = {
-      ...tickets.value[ticketIndex],
-      status: newStatus,
-      updatedAt: new Date().toISOString()
-    }
+    const oldStatus = tickets.value[ticketIndex].status
+    const updatedTicket = { ...tickets.value[ticketIndex], status: newStatus, updatedAt: new Date().toISOString() }
 
     try {
       tickets.value = await window.api.saveTicket(updatedTicket)
+      // Логуємо подію
+      await logActivity(ticketId, `Змінено статус: ${oldStatus} -> ${newStatus}`)
     } catch (error) {
       console.error('Failed to save ticket:', error)
     }
@@ -65,10 +75,16 @@ const handleMoveTicket = async (
 const handleTicketCreated = (updatedTickets: Ticket[]) => {
   tickets.value = updatedTickets
   showTicketForm.value = false
+  const newTicket = updatedTickets[updatedTickets.length - 1]
+  logActivity(newTicket.id, 'Створено новий тікет')
 }
 
 const handleTicketEdited = (updatedTickets: Ticket[]) => {
+  const ticketId = editingTicket.value?.id
   tickets.value = updatedTickets
+  if (ticketId) {
+    logActivity(ticketId, 'Відредаговано дані тікета')
+  }
   editingTicket.value = null
 }
 
@@ -126,6 +142,10 @@ const openEditModal = (ticketId: string) => {
             />
           </div>
         </section>
+      </template>
+
+      <template v-else-if="currentView === 'audit'">
+        <AuditLog />
       </template>
 
       <TicketForm 

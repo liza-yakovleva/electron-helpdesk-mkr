@@ -51,10 +51,19 @@ defineEmits<{
         <span class="hidden sm:inline">Statistical View</span>
       </button>
 
-      <a href="#" class="flex items-center justify-center gap-3 rounded-lg p-3 text-slate-500 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 sm:justify-start" title="Audit Log">
+      <button 
+        @click="$emit('set-view', 'audit')"
+        :class="[
+          'w-full rounded-lg p-3 transition-colors flex items-center justify-center sm:justify-start gap-3',
+          currentView === 'audit'
+            ? 'bg-blue-50 text-blue-700 shadow-sm dark:bg-slate-800 dark:text-white dark:shadow-lg'
+            : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+        ]"
+        title="Audit Log"
+      >
         <ClipboardList :size="20" />
         <span class="hidden sm:inline">Audit Log</span>
-      </a>
+      </button>
     </nav>
 
     <div class="space-y-4 border-t border-slate-200 p-4 dark:border-slate-800">
