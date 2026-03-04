@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import { X } from 'lucide-vue-next'
 import type { Ticket, TicketPriority, TicketCategory } from '../../../shared/types'
 
 const emit = defineEmits<{
@@ -73,56 +74,56 @@ const submitForm = async () => {
 
 <template>
   <div class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-[100] backdrop-blur-sm">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200 text-slate-900">
-      <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-white">
+    <div class="w-full max-w-lg max-h-[90vh] overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-xl animate-in fade-in zoom-in-95 duration-200 flex flex-col dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+      <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-white dark:border-slate-700 dark:bg-slate-900">
         <div>
           <h2 class="text-xl font-bold">New Ticket</h2>
-          <p class="text-sm text-slate-500 mt-1">Fill out the details below.</p>
+          <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Fill out the details below.</p>
         </div>
-        <button @click="emit('close')" class="text-slate-400 hover:text-slate-600 p-2"><X :size="20" /></button>
+        <button @click="emit('close')" class="text-slate-400 hover:text-slate-600 p-2 dark:text-slate-500 dark:hover:text-slate-300"><X :size="20" /></button>
       </div>
 
-      <div class="p-6 overflow-y-auto flex-1 bg-slate-50/50">
+      <div class="p-6 overflow-y-auto flex-1 bg-slate-50/50 dark:bg-slate-950/40">
         <form @submit.prevent="submitForm" class="space-y-4 text-left">
           <div>
-            <label class="block text-sm font-medium mb-1">Title <span class="text-red-500">*</span></label>
-            <input v-model="form.title" type="text" :class="['w-full rounded-lg border px-4 py-2 text-sm', errors.title ? 'border-red-500' : 'border-slate-300']" />
+            <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">Title <span class="text-red-500">*</span></label>
+            <input v-model="form.title" type="text" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500', errors.title ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1">Description <span class="text-red-500">*</span></label>
-            <textarea v-model="form.description" rows="3" :class="['w-full rounded-lg border px-4 py-2 text-sm resize-none', errors.description ? 'border-red-500' : 'border-slate-300']"></textarea>
+            <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">Description <span class="text-red-500">*</span></label>
+            <textarea v-model="form.description" rows="3" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 resize-none outline-none transition-colors placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500', errors.description ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']"></textarea>
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1">Assignee <span class="text-red-500">*</span></label>
-            <input v-model="form.assignee" type="text" class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm" />
+            <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">Assignee <span class="text-red-500">*</span></label>
+            <input v-model="form.assignee" type="text" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500', errors.assignee ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium mb-1">Priority</label>
-              <select v-model="form.priority" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white">
+              <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">Priority</label>
+              <select v-model="form.priority" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400">
                 <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="urgent">Urgent</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium mb-1">Category</label>
-              <select v-model="form.category" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white">
+              <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">Category</label>
+              <select v-model="form.category" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400">
                 <option value="hardware">Hardware</option><option value="software">Software</option><option value="network">Network</option><option value="other">Other</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1">Deadline <span class="text-red-500">*</span></label>
-            <input v-model="form.deadline" type="datetime-local" :class="['w-full rounded-lg border px-4 py-2 text-sm', errors.deadline ? 'border-red-500' : 'border-slate-300']" />
+            <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">Deadline <span class="text-red-500">*</span></label>
+            <input v-model="form.deadline" type="datetime-local" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors dark:bg-slate-800 dark:text-slate-100', errors.deadline ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" />
           </div>
         </form>
       </div>
 
-      <div class="p-5 border-t border-slate-200 bg-white flex justify-end gap-3">
-        <button @click="emit('close')" class="px-5 py-2 text-sm font-medium border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
+      <div class="p-5 border-t border-slate-200 bg-white flex justify-end gap-3 dark:border-slate-700 dark:bg-slate-900">
+        <button @click="emit('close')" class="px-5 py-2 text-sm font-medium border border-slate-300 rounded-lg hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Cancel</button>
         <button @click="submitForm" :disabled="isSubmitting" class="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50">
           {{ isSubmitting ? 'Saving...' : 'Save Ticket' }}
         </button>

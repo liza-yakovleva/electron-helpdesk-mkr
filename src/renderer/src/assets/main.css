@@ -23,6 +23,8 @@
 :root {
   --app-bg-0: #f6f7fb;
   --app-bg-1: #eef1f7;
+  --app-bg-accent-1: #ffffff;
+  --app-bg-accent-2: #dbeafe;
   --app-surface: #ffffffcc;
   --app-surface-solid: #ffffff;
   --app-border: #dbe2ef;
@@ -37,17 +39,28 @@
   --app-radius-lg: 1rem;
   --app-radius-md: 0.75rem;
   --app-radius-sm: 0.5rem;
+  --app-scrollbar-thumb: #c9d3e4;
+  --app-scrollbar-thumb-hover: #95a6c5;
+  --app-selection-bg: #bfdbfe;
+  --app-selection-text: #0b1f56;
 }
 
 .dark {
   --app-bg-0: #0f172a;
   --app-bg-1: #020617;
+  --app-bg-accent-1: #1e293b;
+  --app-bg-accent-2: #0b1220;
   --app-surface: #1e293b99;
   --app-surface-solid: #1e293b;
   --app-border: #334155;
   --app-text: #f1f5f9;
   --app-muted: #94a3b8;
   --app-shadow-soft: 0 8px 24px -14px rgba(0, 0, 0, 0.65);
+  --app-shadow-card: 0 14px 30px -18px rgba(0, 0, 0, 0.8);
+  --app-scrollbar-thumb: #425168;
+  --app-scrollbar-thumb-hover: #64748b;
+  --app-selection-bg: #1e3a8a;
+  --app-selection-text: #dbeafe;
 }
 
 @layer base {
@@ -66,9 +79,10 @@
     color: var(--app-text);
     font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
     background:
-      radial-gradient(circle at 5% 8%, #ffffff 0%, #f6f8ff 32%, transparent 56%),
-      radial-gradient(circle at 95% 92%, #dbeafe 0%, #edf4ff 28%, transparent 58%),
+      radial-gradient(circle at 5% 8%, color-mix(in srgb, var(--app-bg-accent-1) 90%, transparent) 0%, color-mix(in srgb, var(--app-bg-accent-1) 45%, transparent) 32%, transparent 56%),
+      radial-gradient(circle at 95% 92%, color-mix(in srgb, var(--app-bg-accent-2) 65%, transparent) 0%, color-mix(in srgb, var(--app-bg-accent-2) 40%, transparent) 28%, transparent 58%),
       linear-gradient(160deg, var(--app-bg-0), var(--app-bg-1));
+    transition: background-color 200ms ease, color 200ms ease, background 250ms ease;
     text-rendering: geometricPrecision;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -93,13 +107,13 @@
   }
 
   ::selection {
-    background: #bfdbfe;
-    color: #0b1f56;
+    background: var(--app-selection-bg);
+    color: var(--app-selection-text);
   }
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: #c9d3e4 transparent;
+    scrollbar-color: var(--app-scrollbar-thumb) transparent;
   }
 
   *::-webkit-scrollbar {
@@ -112,14 +126,14 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: #c9d3e4;
+    background-color: var(--app-scrollbar-thumb);
     border-radius: 999px;
     border: 2px solid transparent;
     background-clip: content-box;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background-color: #95a6c5;
+    background-color: var(--app-scrollbar-thumb-hover);
   }
 }
 

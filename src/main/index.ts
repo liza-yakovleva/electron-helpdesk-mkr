@@ -7,11 +7,25 @@ import type { Ticket } from '../shared/types'
 // reuse the helper functions defined in db.ts so the storage path is
 // configured in one place. the old implementation used "tickets.json"
 // while the actual file on disk (per user report) is "database.json".
-import { getTickets, saveTickets, getComments, getCommentsByTicketId, addComment, getAuditLogs, addAuditLog, getAuditLogsByTicketId, deleteCommentsByTicketId, deleteAuditLogsByTicketId } from './db'
+import {
+  getTickets,
+  saveTickets,
+  getComments,
+  getCommentsByTicketId,
+  addComment,
+  getAuditLogs,
+  addAuditLog,
+  getAuditLogsByTicketId,
+  deleteCommentsByTicketId,
+  deleteAuditLogsByTicketId
+} from './db'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
-    width: 1200, height: 800, show: false, autoHideMenuBar: true,
+    width: 1200,
+    height: 800,
+    show: false,
+    autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -35,18 +49,22 @@ app.whenReady().then(() => {
 
   ipcMain.handle('save-ticket', (_event, ticket: Ticket) => {
     const tickets = getTickets()
-    const index = tickets.findIndex(t => t.id === ticket.id)
+    const index = tickets.findIndex((t) => t.id === ticket.id)
     if (index !== -1) {
       tickets[index] = { ...ticket, updatedAt: new Date().toISOString() }
     } else {
-      tickets.push({ ...ticket, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() })
+      tickets.push({
+        ...ticket,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      })
     }
     saveTickets(tickets)
     return tickets
   })
 
   ipcMain.handle('delete-ticket', (_event, id) => {
-    const tickets = getTickets().filter(t => t.id !== id)
+    const tickets = getTickets().filter((t) => t.id !== id)
     saveTickets(tickets)
     // Видаляємо також коментарі та логи для цього тікета
     deleteCommentsByTicketId(id)
