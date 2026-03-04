@@ -9,6 +9,8 @@ declare global {
       deleteTicket: (id: string) => Promise<import('../shared/types').Ticket[]>
       getComments: (ticketId: string) => Promise<import('../shared/types').Comment[]>
       addComment: (comment: import('../shared/types').Comment) => Promise<import('../shared/types').Comment[]>
+      getAuditLogs: (ticketId?: string) => Promise<import('../shared/types').AuditEvent[]>
+      addAuditLog: (log: import('../shared/types').AuditEvent) => Promise<import('../shared/types').AuditEvent[]>
     }
   }
 }

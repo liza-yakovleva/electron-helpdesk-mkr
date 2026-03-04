@@ -7,7 +7,7 @@ import type { Ticket } from '../shared/types'
 // reuse the helper functions defined in db.ts so the storage path is
 // configured in one place. the old implementation used "tickets.json"
 // while the actual file on disk (per user report) is "database.json".
-import { getTickets, saveTickets, getComments, getCommentsByTicketId, addComment } from './db'
+import { getTickets, saveTickets, getComments, getCommentsByTicketId, addComment, getAuditLogs, addAuditLog, getAuditLogsByTicketId } from './db'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -57,6 +57,17 @@ app.whenReady().then(() => {
 
   ipcMain.handle('add-comment', (_event, comment) => {
     return addComment(comment)
+  })
+
+  ipcMain.handle('get-audit-logs', (_event, ticketId: string) => {
+    if (ticketId) {
+      return getAuditLogsByTicketId(ticketId)
+    }
+    return getAuditLogs()
+  })
+
+  ipcMain.handle('add-audit-log', (_event, log) => {
+    return addAuditLog(log)
   })
 
   createWindow()
