@@ -5,6 +5,7 @@ import { Trash2 } from 'lucide-vue-next'
 
 const props = defineProps<{
   ticket: Ticket;
+  tickets: Ticket[];
 }>()
 
 const emit = defineEmits<{
@@ -86,6 +87,10 @@ const validate = () => {
       errors.deadline = true
       errors.deadlineMsg = 'Термін має бути в майбутньому'
       isValid = false
+    } else if (deadlineDate.getFullYear() > 9999) {
+      errors.deadline = true
+      errors.deadlineMsg = 'Рік не може бути більше 4 цифр'
+      isValid = false
     } else {
       errors.deadline = false
     }
@@ -114,10 +119,10 @@ const submitForm = async () => {
   }
   
   try {
-    const updatedTickets = await window.api.saveTicket(updatedTicket)
+    const updatedTickets = props.tickets.map(t => t.id === updatedTicket.id ? updatedTicket : t)
     emit('submit', updatedTickets)
   } catch (error) {
-    console.error('Failed to save ticket:', error)
+    console.error('Failed to update ticket locally:', error)
   } finally {
     isSubmitting.value = false
   }
@@ -126,7 +131,7 @@ const submitForm = async () => {
 const deleteTicket = async () => {
   isDeleting.value = true
   try {
-    const updatedTickets = await window.api.deleteTicket(props.ticket.id)
+    const updatedTickets = props.tickets.filter(t => t.id !== props.ticket.id)
     emit('submit', updatedTickets)
   } catch (error) {
     console.error('Failed to delete ticket:', error)
@@ -269,6 +274,7 @@ const deleteTicket = async () => {
             <input 
               v-model="form.deadline" 
               type="datetime-local" 
+              max="9999-12-31T23:59"
               :class="[
                 'w-full rounded-lg border px-4 py-2 text-sm transition-colors focus:outline-none focus:ring-2 bg-white dark:bg-slate-800 dark:text-slate-100', 
                 errors.deadline 

@@ -227,6 +227,7 @@ const isFilterActive = computed(() => {
 
       <button
         @click="$emit('open-ticket-form')"
+        title="Новий тікет [Ctrl+N]"
         class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-700 active:scale-95"
       >
         <Plus :size="18" />

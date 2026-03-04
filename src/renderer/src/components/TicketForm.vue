@@ -50,6 +50,8 @@ const validate = () => {
     const deadlineDate = new Date(form.deadline)
     if (deadlineDate <= new Date()) {
       errors.deadline = true; errors.deadlineMsg = 'Термін має бути в майбутньому'; isValid = false
+    } else if (deadlineDate.getFullYear() > 9999) {
+      errors.deadline = true; errors.deadlineMsg = 'Рік не може бути більше 4 цифр'; isValid = false
     } else { errors.deadline = false }
   }
   return isValid
@@ -132,7 +134,7 @@ const submitForm = async () => {
 
           <div>
             <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Термін <span class="text-red-500">*</span></label>
-            <input v-model="form.deadline" type="datetime-local" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors dark:bg-slate-800 dark:text-slate-100', errors.deadline ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" />
+            <input v-model="form.deadline" type="datetime-local" max="9999-12-31T23:59" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors dark:bg-slate-800 dark:text-slate-100', errors.deadline ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" />
             <p v-if="errors.deadline" class="mt-1 text-xs text-red-500">{{ errors.deadlineMsg }}</p>
           </div>
         </form>
