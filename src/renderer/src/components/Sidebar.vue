@@ -13,7 +13,7 @@ defineEmits<{
 </script>
 
 <template>
-  <aside class="flex h-screen w-16 min-w-16 shrink-0 flex-col border-r border-slate-200 bg-white text-slate-700 transition-colors dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 sm:w-64 sm:min-w-64">
+  <aside class="scrollbar-app flex h-screen min-h-0 w-16 min-w-16 shrink-0 flex-col overflow-x-hidden overflow-y-auto border-r border-slate-200 bg-white text-slate-700 transition-colors dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 sm:w-64 sm:min-w-64">
     <div class="p-4 sm:p-6">
       <h2 class="flex items-center justify-center gap-2 text-xl font-bold text-slate-900 dark:text-white sm:justify-start">
         <ClipboardList class="text-blue-500" />
