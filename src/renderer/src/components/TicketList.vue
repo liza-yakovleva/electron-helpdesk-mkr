@@ -83,8 +83,8 @@ const getStatusLabel = (s: string) => {
 </script>
 
 <template>
-  <div class="scrollbar-app flex min-h-0 flex-1 flex-col space-y-4 overflow-y-auto pb-4">
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+  <div class="flex min-h-0 flex-1 flex-col space-y-4 h-full">
+    <div class="shrink-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
       <div class="grid gap-3 md:grid-cols-3">
         <input
           v-model="searchQuery"
@@ -124,8 +124,8 @@ const getStatusLabel = (s: string) => {
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
-      <div class="overflow-x-auto">
+    <div class="flex-1 flex flex-col min-h-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+      <div class="flex-1 overflow-auto scrollbar-app">
         <table class="min-w-full border-collapse text-left text-sm text-slate-700 dark:text-slate-200">
           <thead class="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
             <tr>
@@ -162,7 +162,7 @@ const getStatusLabel = (s: string) => {
       </div>
       
       <!-- Pagination Controls -->
-      <div v-if="totalPages > 1" class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
+      <div v-if="totalPages > 1" class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50 mt-auto">
         <span class="text-sm text-slate-600 dark:text-slate-400">
           Сторінка <span class="font-bold text-slate-900 dark:text-slate-100">{{ currentPage }}</span> з <span class="font-bold text-slate-900 dark:text-slate-100">{{ totalPages }}</span>
         </span>
