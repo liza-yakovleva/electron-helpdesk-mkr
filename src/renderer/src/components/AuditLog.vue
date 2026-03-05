@@ -16,7 +16,7 @@ const refreshLogs = async () => {
 }
 
 const currentPage = ref(1)
-const itemsPerPage = ref(15)
+const itemsPerPage = ref(10)
 
 const totalPages = computed(() => {
   return Math.ceil(auditStore.logs.length / itemsPerPage.value) || 1
@@ -65,8 +65,8 @@ const getActionColor = (action: string) => {
       </button>
     </header>
 
-    <div class="flex-1 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-      <div class="h-full overflow-y-auto scrollbar-app">
+    <div class="flex-1 flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex-1 overflow-y-auto scrollbar-app">
         <table class="w-full text-left text-sm border-separate border-spacing-0">
           <thead class="sticky top-0 bg-slate-50 dark:bg-slate-800 text-slate-500 font-bold uppercase text-[10px] tracking-wider z-10">
             <tr>
@@ -103,7 +103,7 @@ const getActionColor = (action: string) => {
       </div>
       
       <!-- Pagination Controls -->
-      <div v-if="totalPages > 1" class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-3 dark:border-slate-700 dark:bg-slate-800/50">
+      <div v-if="totalPages > 1" class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-3 dark:border-slate-700 dark:bg-slate-800/50 mt-auto">
         <span class="text-sm text-slate-600 dark:text-slate-400">
           Сторінка <span class="font-bold text-slate-900 dark:text-slate-100">{{ currentPage }}</span> з <span class="font-bold text-slate-900 dark:text-slate-100">{{ totalPages }}</span>
         </span>
