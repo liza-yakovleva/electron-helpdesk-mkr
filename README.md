@@ -30,9 +30,9 @@
 3.  **Форми:** Валідація полів, інлайн-помилки, маски введення.
 4.  **Async UX:** Стани Loading/Empty/Error з кнопкою Retry.
 5.  **Безпека дій:** Confirm-діалоги для деструктивних операцій.
-6.  **Audit Log:** Повний журнал подій (хто, що, коли змінив).
-7.  **Personalization:** Підтримка Dark/Light тем із збереженням сесії.
-8.  **Electron Native:** Tray icon та системні сповіщення.
+6.  **Personalization:** Підтримка Dark/Light тем із збереженням сесії.
+7.  **Electron Native:** Tray icon.
+  
 
 ##  Інструкція із запуску
 
@@ -45,6 +45,3 @@ npm install
 
 # Запуск у dev-режимі
 npm run dev
-
-# Збірка під Windows
-npm run build:win
