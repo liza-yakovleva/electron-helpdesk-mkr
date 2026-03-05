@@ -75,9 +75,9 @@ defineEmits<{
       
       <div class="flex items-center justify-center gap-3 p-2 sm:justify-start">
         <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
-          LY
+          U
         </div>
-        <span class="hidden sm:inline text-sm font-medium text-slate-700 dark:text-slate-200">Liza</span>
+        <span class="hidden sm:inline text-sm font-medium text-slate-700 dark:text-slate-200">User</span>
       </div>
     </div>
   </aside>
