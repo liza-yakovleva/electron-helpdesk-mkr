@@ -220,6 +220,7 @@ const handleTicketEdited = async (updatedTickets: Ticket[]) => {
   const ticketId = editingTicket.value?.id
   const wasDeleted = !updatedTickets.some(t => t.id === ticketId)
   const previousTicketState = tickets.value.find(t => t.id === ticketId)
+  const nextTicketState = updatedTickets.find(t => t.id === ticketId)
   
   backuptickets.value = [...tickets.value]
   tickets.value = updatedTickets
@@ -233,8 +234,10 @@ const handleTicketEdited = async (updatedTickets: Ticket[]) => {
       // Commit
       if (ticketId) {
         if (wasDeleted) {
+          await window.api.deleteTicket(ticketId)
           await auditStore.addLog(ticketId, 'Видалено тікет')
-        } else {
+        } else if (nextTicketState) {
+          await window.api.saveTicket(nextTicketState)
           await auditStore.addLog(ticketId, 'Відредаговано дані тікета')
         }
       }

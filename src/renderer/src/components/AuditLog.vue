@@ -25,7 +25,13 @@ const totalPages = computed(() => {
 const paginatedLogs = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
-  return auditStore.logs.slice(start, end)
+  
+  // Копіюємо і сортуємо від найновіших до найстаріших
+  const sortedLogs = [...auditStore.logs].sort((a, b) => {
+    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  })
+  
+  return sortedLogs.slice(start, end)
 })
 
 onMounted(async () => {
