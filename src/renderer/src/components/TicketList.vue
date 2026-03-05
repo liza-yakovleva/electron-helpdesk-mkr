@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { Ticket } from '../../../shared/types'
 import { MessageSquare } from 'lucide-vue-next' 
-import TicketComments from './TicketComments.vue' 
 
 const props = defineProps<{
   tickets: Ticket[]
 }>()
-
-const showCommentsModal = ref(false)
 
 const searchQuery = ref('')
 const selectedPriority = ref<'all' | Ticket['priority']>('all')
@@ -32,6 +29,23 @@ const filteredTickets = computed(() => {
 
     return matchesSearch && matchesPriority && matchesStatus
   })
+})
+
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredTickets.value.length / itemsPerPage.value) || 1
+})
+
+const paginatedTickets = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return filteredTickets.value.slice(start, end)
+})
+
+watch([searchQuery, selectedPriority, selectedStatus], () => {
+  currentPage.value = 1
 })
 
 const formatCreatedAt = (value: string) => {
@@ -124,7 +138,7 @@ const getStatusLabel = (s: string) => {
           </thead>
           <tbody>
             <tr
-              v-for="ticket in filteredTickets"
+              v-for="ticket in paginatedTickets"
               :key="ticket.id"
               class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60"
             >
@@ -138,13 +152,37 @@ const getStatusLabel = (s: string) => {
                 {{ formatCreatedAt(ticket.createdAt) }}
               </td>
             </tr>
-            <tr v-if="filteredTickets.length === 0">
+            <tr v-if="paginatedTickets.length === 0">
               <td colspan="5" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">
                 За поточними фільтрами тікетів не знайдено.
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+      
+      <!-- Pagination Controls -->
+      <div v-if="totalPages > 1" class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
+        <span class="text-sm text-slate-600 dark:text-slate-400">
+          Сторінка <span class="font-bold text-slate-900 dark:text-slate-100">{{ currentPage }}</span> з <span class="font-bold text-slate-900 dark:text-slate-100">{{ totalPages }}</span>
+        </span>
+        
+        <div class="flex items-center gap-2">
+          <button 
+            @click="currentPage--" 
+            :disabled="currentPage === 1"
+            class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          >
+            Попередня
+          </button>
+          <button 
+            @click="currentPage++" 
+            :disabled="currentPage === totalPages"
+            class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          >
+            Наступна
+          </button>
+        </div>
       </div>
     </div>
   </div>

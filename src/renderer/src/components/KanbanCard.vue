@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import type { Ticket } from '../../../shared/types'
 import { MessageSquare } from 'lucide-vue-next'
-import TicketComments from './TicketComments.vue'
 
 const props = defineProps<{
   ticket: Ticket
 }>()
 
-const showCommentsModal = ref(false)
-
 const emit = defineEmits<{
   (e: 'edit-ticket', ticketId: string): void
+  (e: 'open-comments', ticketId: string): void
 }>()
+
+const commentCount = ref(0)
+onMounted(async () => {
+  try {
+    const comments = await window.api.getComments(props.ticket.id)
+    commentCount.value = comments.length
+  } catch (error) {
+    console.error('Failed to load comment count', error)
+  }
+})
 
 const slaStatus = computed(() => {
   const now = new Date()
@@ -134,11 +142,12 @@ const handleDragStart = (e: DragEvent) => {
 
       <div class="flex items-center gap-2">
         <button
-          @click.stop="showCommentsModal = true"
-          class="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/10"
+          @click.stop="emit('open-comments', ticket.id)"
+          class="flex items-center gap-1.5 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/10"
           title="Коментарі"
         >
           <MessageSquare :size="14" />
+          <span v-if="commentCount > 0" class="text-[10px] font-bold leading-none">{{ commentCount }}</span>
         </button>
 
         <div
@@ -169,11 +178,5 @@ const handleDragStart = (e: DragEvent) => {
     <div class="mt-2 flex justify-between text-[10px] text-slate-400 dark:text-slate-500">
       <span>Термін: {{ formatDate(ticket.deadline) }}</span>
     </div>
-    <TicketComments
-      v-if="showCommentsModal"
-      :ticketId="ticket.id"
-      :ticketTitle="ticket.title"
-      @close="showCommentsModal = false"
-    />
   </div>
 </template>

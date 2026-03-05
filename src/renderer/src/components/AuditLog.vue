@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { auditStore } from '../store/auditStore'
 import { ClipboardList, RefreshCw } from 'lucide-vue-next'
 
@@ -9,10 +9,24 @@ const refreshLogs = async () => {
   isRefreshing.value = true
   try {
     await auditStore.loadLogs()
+    currentPage.value = 1
   } finally {
     setTimeout(() => { isRefreshing.value = false }, 500)
   }
 }
+
+const currentPage = ref(1)
+const itemsPerPage = ref(15)
+
+const totalPages = computed(() => {
+  return Math.ceil(auditStore.logs.length / itemsPerPage.value) || 1
+})
+
+const paginatedLogs = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return auditStore.logs.slice(start, end)
+})
 
 onMounted(async () => {
   await auditStore.loadLogs()
@@ -57,7 +71,7 @@ const getActionColor = (action: string) => {
           </thead>
           <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
             <tr 
-              v-for="log in auditStore.logs" 
+              v-for="log in paginatedLogs" 
               :key="log.id" 
               class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
             >
@@ -76,9 +90,33 @@ const getActionColor = (action: string) => {
           </tbody>
         </table>
 
-        <div v-if="auditStore.logs.length === 0" class="flex flex-col items-center justify-center py-20 text-slate-400">
+        <div v-if="paginatedLogs.length === 0" class="flex flex-col items-center justify-center py-20 text-slate-400">
           <ClipboardList :size="48" class="opacity-20 mb-4" />
           <p>Журнал аудиту порожній</p>
+        </div>
+      </div>
+      
+      <!-- Pagination Controls -->
+      <div v-if="totalPages > 1" class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-3 dark:border-slate-700 dark:bg-slate-800/50">
+        <span class="text-sm text-slate-600 dark:text-slate-400">
+          Сторінка <span class="font-bold text-slate-900 dark:text-slate-100">{{ currentPage }}</span> з <span class="font-bold text-slate-900 dark:text-slate-100">{{ totalPages }}</span>
+        </span>
+        
+        <div class="flex items-center gap-2">
+          <button 
+            @click="currentPage--" 
+            :disabled="currentPage === 1"
+            class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          >
+            Попередня
+          </button>
+          <button 
+            @click="currentPage++" 
+            :disabled="currentPage === totalPages"
+            class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          >
+            Наступна
+          </button>
         </div>
       </div>
     </div>

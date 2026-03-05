@@ -19,8 +19,11 @@ const form = reactive({
 
 const errors = reactive({
   title: false,
+  titleMsg: '',
   description: false,
+  descriptionMsg: '',
   assignee: false,
+  assigneeMsg: '',
   deadline: false,
   deadlineMsg: 'Будь ласка, вкажіть коректний термін'
 })
@@ -29,15 +32,26 @@ const isSubmitting = ref(false)
 
 const validate = () => {
   let isValid = true
-  if (!form.title.trim()) { errors.title = true; isValid = false } else { errors.title = false }
-  if (form.description.trim().length < 10) { errors.description = true; isValid = false } else { errors.description = false }
-  if (!form.assignee.trim()) { errors.assignee = true; isValid = false } else { errors.assignee = false }
+  if (!form.title.trim()) { errors.title = true; errors.titleMsg = 'Поле не може бути пустим'; isValid = false } else { errors.title = false }
+  
+  if (!form.description.trim()) { 
+    errors.description = true; errors.descriptionMsg = 'Поле не може бути пустим'; isValid = false 
+  } else if (form.description.trim().length < 10) { 
+    errors.description = true; errors.descriptionMsg = 'Опис має містити більше 10 символів'; isValid = false 
+  } else { 
+    errors.description = false 
+  }
+
+  if (!form.assignee.trim()) { errors.assignee = true; errors.assigneeMsg = 'Поле не може бути пустим'; isValid = false } else { errors.assignee = false }
+
   if (!form.deadline) {
-    errors.deadline = true; isValid = false
+    errors.deadline = true; errors.deadlineMsg = 'Поле не може бути пустим'; isValid = false
   } else {
     const deadlineDate = new Date(form.deadline)
     if (deadlineDate <= new Date()) {
       errors.deadline = true; errors.deadlineMsg = 'Термін має бути в майбутньому'; isValid = false
+    } else if (deadlineDate.getFullYear() > 9999) {
+      errors.deadline = true; errors.deadlineMsg = 'Рік не може бути більше 4 цифр'; isValid = false
     } else { errors.deadline = false }
   }
   return isValid
@@ -88,16 +102,19 @@ const submitForm = async () => {
           <div>
             <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Заголовок <span class="text-red-500">*</span></label>
             <input v-model="form.title" type="text" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500', errors.title ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" placeholder="Короткий опис проблеми" />
+            <p v-if="errors.title" class="mt-1 text-xs text-red-500">{{ errors.titleMsg }}</p>
           </div>
 
           <div>
             <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Опис <span class="text-red-500">*</span></label>
             <textarea v-model="form.description" rows="3" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 resize-none outline-none transition-colors placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500', errors.description ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" placeholder="Детально опишіть проблему..."></textarea>
+            <p v-if="errors.description" class="mt-1 text-xs text-red-500">{{ errors.descriptionMsg }}</p>
           </div>
 
           <div>
             <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Виконавець <span class="text-red-500">*</span></label>
             <input v-model="form.assignee" type="text" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500', errors.assignee ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" />
+            <p v-if="errors.assignee" class="mt-1 text-xs text-red-500">{{ errors.assigneeMsg }}</p>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -117,7 +134,7 @@ const submitForm = async () => {
 
           <div>
             <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Термін <span class="text-red-500">*</span></label>
-            <input v-model="form.deadline" type="datetime-local" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors dark:bg-slate-800 dark:text-slate-100', errors.deadline ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" />
+            <input v-model="form.deadline" type="datetime-local" max="9999-12-31T23:59" :class="['w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 outline-none transition-colors dark:bg-slate-800 dark:text-slate-100', errors.deadline ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-blue-500 dark:border-slate-600 dark:focus:border-blue-400']" />
             <p v-if="errors.deadline" class="mt-1 text-xs text-red-500">{{ errors.deadlineMsg }}</p>
           </div>
         </form>

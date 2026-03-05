@@ -1,6 +1,6 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, Tray, Menu } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import type { Ticket } from '../shared/types'
 
@@ -20,8 +20,12 @@ import {
   deleteAuditLogsByTicketId
 } from './db'
 
+let tray: Tray | null = null
+let mainWindow: BrowserWindow | null = null
+let isAppQuitting: boolean = false
+
 function createWindow(): void {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     show: false,
@@ -33,7 +37,16 @@ function createWindow(): void {
     }
   })
 
-  mainWindow.on('ready-to-show', () => mainWindow.show())
+  mainWindow.on('ready-to-show', () => mainWindow?.show())
+  
+  mainWindow.on('close', (event) => {
+    if (!isAppQuitting) {
+      event.preventDefault()
+      mainWindow?.hide()
+    }
+    return false
+  })
+
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -43,6 +56,30 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
   if (process.platform === 'win32') app.setAppUserModelId('com.electron.helpdesk')
+
+  tray = new Tray(icon)
+  const contextMenu = Menu.buildFromTemplate([
+    { 
+      label: 'Додати тікет', 
+      click: () => {
+        mainWindow?.show()
+        mainWindow?.webContents.send('open-add-ticket')
+      } 
+    },
+    { type: 'separator' },
+    { 
+      label: 'Вийти', 
+      click: () => {
+        isAppQuitting = true
+        app.quit()
+      } 
+    }
+  ])
+  tray.setToolTip('Helpdesk Ticketing System')
+  tray.setContextMenu(contextMenu)
+  tray.on('click', () => {
+    mainWindow?.show()
+  })
 
   // ОБРОБНИКИ ДЛЯ ДІМИ ТА МІШІ
   ipcMain.handle('get-tickets', () => getTickets())

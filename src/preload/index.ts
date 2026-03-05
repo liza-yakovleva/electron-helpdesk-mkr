@@ -18,5 +18,6 @@ contextBridge.exposeInMainWorld('api', {
   getComments: (ticketId: string): Promise<Comment[]> => ipcRenderer.invoke('get-comments', ticketId),
   addComment: (comment: Comment): Promise<Comment[]> => ipcRenderer.invoke('add-comment', comment),
   getAuditLogs: (ticketId?: string): Promise<AuditEvent[]> => ipcRenderer.invoke('get-audit-logs', ticketId),
-  addAuditLog: (log: AuditEvent): Promise<AuditEvent[]> => ipcRenderer.invoke('add-audit-log', log)
+  addAuditLog: (log: AuditEvent): Promise<AuditEvent[]> => ipcRenderer.invoke('add-audit-log', log),
+  onOpenAddTicket: (callback: () => void) => ipcRenderer.on('open-add-ticket', callback)
 })

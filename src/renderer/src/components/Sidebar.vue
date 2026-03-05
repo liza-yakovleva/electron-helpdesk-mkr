@@ -67,7 +67,7 @@ defineEmits<{
     </nav>
 
     <div class="mt-auto shrink-0 space-y-4 border-t border-slate-200 p-4 dark:border-slate-800">
-      <button @click="$emit('toggle-theme')" class="flex w-full items-center justify-center gap-3 rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 sm:justify-start">
+      <button @click="$emit('toggle-theme')" title="Змінити тему [Ctrl+T]" class="flex w-full items-center justify-center gap-3 rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 sm:justify-start">
         <Moon v-if="theme === 'light'" :size="18" />
         <Sun v-else :size="18" />
         <span class="hidden sm:inline">{{ theme === 'light' ? 'Темна тема' : 'Світла тема' }}</span>
@@ -75,9 +75,9 @@ defineEmits<{
       
       <div class="flex items-center justify-center gap-3 p-2 sm:justify-start">
         <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
-          LY
+          U
         </div>
-        <span class="hidden sm:inline text-sm font-medium text-slate-700 dark:text-slate-200">Liza</span>
+        <span class="hidden sm:inline text-sm font-medium text-slate-700 dark:text-slate-200">User</span>
       </div>
     </div>
   </aside>
